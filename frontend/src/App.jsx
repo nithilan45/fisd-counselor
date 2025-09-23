@@ -21,10 +21,12 @@ function App() {
 
   const checkVectorStoreStatus = async () => {
     try {
-      const response = await axios.get('/api/upload/vector-store')
+      const response = await axios.get('/api/upload')
       setHasIndexedFiles(response.data.hasIndexedFiles)
     } catch (error) {
       console.error('Error checking vector store status:', error)
+      // For Vercel deployment, assume files are available
+      setHasIndexedFiles(true)
     }
   }
 
