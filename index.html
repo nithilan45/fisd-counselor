@@ -1,80 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FISD Counselor AI</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .status {
-            background: rgba(0, 255, 0, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid #00ff00;
-        }
-        .test-links {
-            margin-top: 30px;
-        }
-        .test-links a {
-            color: #87ceeb;
-            text-decoration: none;
-            margin-right: 20px;
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-        .test-links a:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🎓 FISD Counselor AI</h1>
-        
-        <div class="status">
-            <h3>✅ Deployment Successful!</h3>
-            <p>Your FISD Counselor Web App is now live on Vercel!</p>
-        </div>
-
-        <h3>🔧 Test Your Deployment:</h3>
-        <div class="test-links">
-            <a href="/api/test" target="_blank">Test API</a>
-            <a href="/api/upload" target="_blank">Test Upload API</a>
-            <a href="/frontend/dist/" target="_blank">Frontend App</a>
-        </div>
-
-        <h3>📱 Next Steps:</h3>
-        <ol>
-            <li>Make sure <code>PERPLEXITY_API_KEY</code> is set in Vercel environment variables</li>
-            <li>Test the main app at: <code>/frontend/dist/</code></li>
-            <li>If you see this page, the routing is working!</li>
-        </ol>
-
-        <div style="margin-top: 40px; text-align: center; opacity: 0.7;">
-            <p>FISD Counselor Web App - Powered by Perplexity AI</p>
-        </div>
-    </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FISD Counselor Web App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
