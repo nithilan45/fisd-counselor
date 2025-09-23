@@ -9,6 +9,7 @@ type Options = {
 export function useDragScroll<T extends HTMLElement>(opts: Options = { axis: "x", momentum: true }) {
   const ref = useRef<T | null>(null);
   const isDown = useRef(false);
+  const isDragging = useRef(false);
   const startX = useRef(0);
   const startY = useRef(0);
   const scrollLeft = useRef(0);
@@ -22,6 +23,7 @@ export function useDragScroll<T extends HTMLElement>(opts: Options = { axis: "x"
       // Only left mouse / primary pointer
       if (e.button !== 0 && e.pointerType === "mouse") return;
       isDown.current = true;
+      isDragging.current = false;
       // capture so we keep events even if pointer leaves element
       el.setPointerCapture?.(e.pointerId);
       startX.current = e.clientX;
@@ -30,17 +32,23 @@ export function useDragScroll<T extends HTMLElement>(opts: Options = { axis: "x"
       scrollTop.current = el.scrollTop;
       // visual feedback
       el.style.cursor = "grabbing";
-      // prevent text selection
-      (document.body as any).style.userSelect = "none";
     };
 
     const onPointerMove = (e: PointerEvent) => {
       if (!isDown.current) return;
-      e.preventDefault();
+      
       const dx = e.clientX - startX.current;
       const dy = e.clientY - startY.current;
-      if (opts.axis !== "y") el.scrollLeft = scrollLeft.current - dx;
-      if (opts.axis !== "x") el.scrollTop  = scrollTop.current  - dy;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      // Only start dragging if moved more than 5 pixels
+      if (distance > 5) {
+        isDragging.current = true;
+        e.preventDefault();
+        (document.body as any).style.userSelect = "none";
+        if (opts.axis !== "y") el.scrollLeft = scrollLeft.current - dx;
+        if (opts.axis !== "x") el.scrollTop  = scrollTop.current  - dy;
+      }
     };
 
     const end = (e: PointerEvent | PointerEventInit) => {
@@ -49,6 +57,7 @@ export function useDragScroll<T extends HTMLElement>(opts: Options = { axis: "x"
       el.releasePointerCapture?.((e as PointerEvent).pointerId ?? 0);
       el.style.cursor = "";
       (document.body as any).style.userSelect = "";
+      isDragging.current = false;
     };
 
     el.addEventListener("pointerdown", onPointerDown, { passive: false });
