@@ -128,7 +128,11 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
               // Force scrollbar to always appear
               scrollbarGutter: 'stable',
               // Add explicit height to ensure scrollbar space
-              maxHeight: '60px'
+              maxHeight: '60px',
+              // Force scrollbar to always show
+              WebkitScrollbar: 'always',
+              // Add padding to force scrollbar space
+              paddingBottom: '12px'
             }}
           >
             {suggestions.map((s, idx) => (
@@ -142,9 +146,22 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
               </button>
             ))}
           </div>
-          {/* Fallback: Always show a scrollbar area */}
-          <div className="h-2 bg-gray-200 dark:bg-gray-600 mx-4 rounded-full overflow-hidden">
-            <div className="h-full bg-blue-500 rounded-full w-1/3"></div>
+          {/* Custom scrollbar that's always visible */}
+          <div className="h-3 bg-gray-200 dark:bg-gray-600 mx-4 rounded-full overflow-hidden border border-gray-300 dark:border-gray-500">
+            <div 
+              className="h-full bg-blue-500 rounded-full transition-all duration-200 cursor-pointer hover:bg-blue-600"
+              style={{
+                width: '30%',
+                marginLeft: '0%'
+              }}
+              onClick={(e) => {
+                const container = e.currentTarget.parentElement.previousElementSibling;
+                if (container) {
+                  const scrollLeft = (container.scrollWidth - container.clientWidth) * 0.3;
+                  container.scrollLeft = scrollLeft;
+                }
+              }}
+            ></div>
           </div>
         </div>
       )}
