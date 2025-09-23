@@ -63,7 +63,8 @@
   .chip-bar {
     display: flex;
     flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow-x: scroll !important;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
     scrollbar-color: #6b7280 #e5e7eb;
@@ -71,42 +72,50 @@
     /* Force scrollbar to always be visible */
     scrollbar-gutter: stable;
     /* Ensure scrollbar appears below the content */
-    padding-bottom: 2px;
+    padding-bottom: 4px;
     /* Force scrollbar to always show */
-    overflow-y: hidden;
     height: auto;
     min-height: fit-content;
+    /* Ensure scrollbar is interactive */
+    cursor: default;
   }
   
+  /* Force scrollbar to always be visible */
   .chip-bar::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
+    -webkit-appearance: none;
+    height: 8px;
+    width: 8px;
+  }
+  
+  .chip-bar::-webkit-scrollbar:horizontal {
+    height: 8px;
   }
   
   .chip-bar::-webkit-scrollbar-track {
     background: #e5e7eb;
-    border-radius: 3px;
+    border-radius: 4px;
     margin: 0 2px;
+    border: 1px solid #d1d5db;
   }
   
   .chip-bar::-webkit-scrollbar-thumb {
     background: #6b7280;
-    border-radius: 3px;
+    border-radius: 4px;
     border: 1px solid #e5e7eb;
-    min-width: 30px;
+    min-width: 20px;
   }
   
   .chip-bar::-webkit-scrollbar-thumb:hover {
-    background: #4b5563;
-    border-color: #d1d5db;
+    background: #1f2937;
+    border-color: #9ca3af;
   }
   
   .chip-bar::-webkit-scrollbar-thumb:active {
-    background: #374151;
+    background: #111827;
   }
   
   .chip-bar::-webkit-scrollbar-corner {
-    background: #e5e7eb;
+    background: #d1d5db;
   }
   
   /* Dark mode */
