@@ -66,37 +66,43 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    scrollbar-color: #9ca3af #e5e7eb;
+    scrollbar-color: #6b7280 #e5e7eb;
     gap: 0.5rem;
     /* Force scrollbar to always be visible */
     scrollbar-gutter: stable;
+    /* Ensure scrollbar appears below the content */
+    padding-bottom: 2px;
+    /* Force scrollbar to always show */
+    overflow-y: hidden;
+    height: auto;
+    min-height: fit-content;
   }
   
   .chip-bar::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
+    height: 6px;
+    width: 6px;
   }
   
   .chip-bar::-webkit-scrollbar-track {
     background: #e5e7eb;
-    border-radius: 4px;
-    margin: 0 4px;
+    border-radius: 3px;
+    margin: 0 2px;
   }
   
   .chip-bar::-webkit-scrollbar-thumb {
-    background: #9ca3af;
-    border-radius: 4px;
+    background: #6b7280;
+    border-radius: 3px;
     border: 1px solid #e5e7eb;
-    min-width: 20px;
+    min-width: 30px;
   }
   
   .chip-bar::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
+    background: #4b5563;
     border-color: #d1d5db;
   }
   
   .chip-bar::-webkit-scrollbar-thumb:active {
-    background: #4b5563;
+    background: #374151;
   }
   
   .chip-bar::-webkit-scrollbar-corner {
@@ -105,7 +111,7 @@
   
   /* Dark mode */
   .dark .chip-bar {
-    scrollbar-color: #6b7280 #374151;
+    scrollbar-color: #9ca3af #374151;
   }
   
   .dark .chip-bar::-webkit-scrollbar-track {
@@ -114,17 +120,17 @@
   }
   
   .dark .chip-bar::-webkit-scrollbar-thumb {
-    background: #6b7280;
+    background: #9ca3af;
     border: 1px solid #374151;
   }
   
   .dark .chip-bar::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af;
+    background: #d1d5db;
     border-color: #4b5563;
   }
   
   .dark .chip-bar::-webkit-scrollbar-thumb:active {
-    background: #d1d5db;
+    background: #f3f4f6;
   }
   
   .dark .chip-bar::-webkit-scrollbar-corner {
