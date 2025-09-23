@@ -1,14 +1,4 @@
 const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-
-// Perplexity API configuration
-const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
-const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
-
-if (!PERPLEXITY_API_KEY) {
-  console.error('ERROR: PERPLEXITY_API_KEY environment variable is required');
-}
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -36,26 +26,12 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Question is required' });
     }
 
+    const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
     if (!PERPLEXITY_API_KEY) {
       return res.status(500).json({ error: 'Perplexity API key not configured' });
     }
 
     console.log(`Processing question: ${question}`);
-
-    // Read local PDFs for context (in Vercel, these would be in the build)
-    const pdfsDir = path.join(process.cwd(), 'backend', 'pdfs');
-    let pdfFiles = [];
-    
-    try {
-      const files = await fs.promises.readdir(pdfsDir);
-      pdfFiles = files.filter(file => file.toLowerCase().endsWith('.pdf'));
-    } catch (error) {
-      console.log('No PDFs directory found, continuing without PDF context');
-    }
-
-    const pdfContext = pdfFiles.length > 0
-      ? `\n\nI also have access to these FISD documents: ${pdfFiles.join(', ')}. Use information from these documents when relevant.`
-      : '';
 
     // Build conversation history for context
     let historyMessages = '';
@@ -68,8 +44,7 @@ export default async function handler(req, res) {
       {
         role: 'system',
         content: `You are a helpful FISD (Frisco Independent School District) counselor assistant.
-        Answer questions about FISD policies, procedures, and academic guidance using both web search
-        and the provided FISD document context.
+        Answer questions about FISD policies, procedures, and academic guidance using web search.
 
         CRITICAL INSTRUCTIONS:
         - Give COMPREHENSIVE, DETAILED answers that fully address the question
@@ -84,8 +59,7 @@ export default async function handler(req, res) {
         - Be as detailed as possible while staying readable
         - Always provide sources at the end in simple format
 
-        Use the conversation context to understand references and maintain topic continuity.
-        ${pdfContext}`
+        Use the conversation context to understand references and maintain topic continuity.`
       },
       {
         role: 'user',
@@ -93,7 +67,7 @@ export default async function handler(req, res) {
       }
     ];
 
-    const perplexityResponse = await axios.post(PERPLEXITY_API_URL, {
+    const perplexityResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
       model: 'sonar-pro',
       messages: messages,
     }, {
@@ -106,19 +80,19 @@ export default async function handler(req, res) {
 
     let answer = perplexityResponse.data.choices[0].message.content;
 
-    // Aggressively clean up the response - remove ALL formatting
+    // Clean up the response
     answer = answer
-      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold
-      .replace(/\*(.*?)\*/g, '$1') // Remove italic
-      .replace(/#{1,6}\s*/g, '') // Remove headers
-      .replace(/\n\s*\n\s*\n/g, '\n\n') // Clean up multiple newlines
-      .replace(/^\s*[-*+]\s+/gm, '') // Remove bullet points
-      .replace(/^\s*\d+\.\s+/gm, '') // Remove numbered lists
-      .replace(/\|.*\|/g, '') // Remove tables
-      .replace(/---+/g, '') // Remove horizontal lines
-      .replace(/\[.*?\]/g, '') // Remove citations in brackets
-      .replace(/\n\s*\n/g, ' ') // Convert double newlines to spaces
-      .replace(/\s+/g, ' ') // Clean up multiple spaces
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/#{1,6}\s*/g, '')
+      .replace(/\n\s*\n\s*\n/g, '\n\n')
+      .replace(/^\s*[-*+]\s+/gm, '')
+      .replace(/^\s*\d+\.\s+/gm, '')
+      .replace(/\|.*\|/g, '')
+      .replace(/---+/g, '')
+      .replace(/\[.*?\]/g, '')
+      .replace(/\n\s*\n/g, ' ')
+      .replace(/\s+/g, ' ')
       .trim();
 
     const sources = perplexityResponse.data.choices[0].message.citations ?
@@ -128,51 +102,24 @@ export default async function handler(req, res) {
         title: citation.title || 'Web Source'
       })) : [];
 
-    // Add PDF sources if we have them
-    if (pdfFiles.length > 0) {
-      sources.push({
-        type: 'pdf',
-        filename: 'FISD Documents',
-        page: 'Referenced'
-      });
-    }
+    // Generate simple follow-up questions
+    const followUps = [
+      "What are the requirements for this?",
+      "How do I apply for this?",
+      "What are the benefits of this program?"
+    ];
 
-    // Generate follow-up questions based on the answer and context
-    const followUpPrompt = `Based on the following conversation and the last answer, generate exactly three very short, concise, and relevant follow-up questions. Do not number them or add any introductory phrases. Just provide the questions separated by newlines.
-    Conversation:
-    ${historyMessages}User: ${question}
-    Assistant: ${answer}
-    Follow-up questions:`;
-
-    const followUpResponse = await axios.post(PERPLEXITY_API_URL, {
-      model: 'sonar-pro',
-      messages: [{ role: 'user', content: followUpPrompt }],
-      max_tokens: 100,
-    }, {
-      headers: {
-        'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
+    return res.status(200).json({ 
+      success: true, 
+      answer, 
+      sources, 
+      question, 
+      followUps 
     });
-
-    let followUps = [];
-    if (followUpResponse.data.choices && followUpResponse.data.choices[0] && followUpResponse.data.choices[0].message) {
-      const rawFollowUps = followUpResponse.data.choices[0].message.content;
-      console.log('Raw followups:', rawFollowUps);
-      followUps = rawFollowUps
-        .split('\n')
-        .map(q => q.replace(/^\s*[-*+\d\.]*\s*/, '').trim()) // Remove any leading bullets/numbers
-        .filter(q => q.length > 5) // Filter out very short or empty lines
-        .slice(0, 3); // Ensure exactly three
-      console.log('Processed followups:', followUps);
-    }
-
-    res.json({ success: true, answer, sources, question, followUps });
 
   } catch (error) {
     console.error('Ask error:', error.response ? error.response.data : error.message);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to process question',
       details: error.response ? error.response.data : error.message
     });
