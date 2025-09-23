@@ -75,10 +75,10 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <NavBar />
       
-      <main className="container mx-auto px-4 py-6 max-w-4xl">
+      <main className="flex-1 overflow-hidden">
         <ChatInterface 
           messages={messages}
           onSendMessage={handleSendMessage}

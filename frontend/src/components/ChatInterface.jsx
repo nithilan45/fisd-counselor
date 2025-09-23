@@ -31,9 +31,9 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)] bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-800">
       {/* Chat Header */}
-      <div className="flex items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20 rounded-t-lg">
+      <div className="flex items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20">
         <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-3">
           <Bot className="w-5 h-5 text-white" />
         </div>
