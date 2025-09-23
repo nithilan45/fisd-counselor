@@ -96,7 +96,7 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
       {suggestions.length > 0 && (
         <div className="px-4 pt-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
           <div 
-            className="chip-bar px-2 pb-2"
+            className="chip-bar px-2 pb-2 border-b border-gray-200 dark:border-gray-600"
             onWheel={(e) => {
               // Enable horizontal scrolling with mouse wheel
               if (e.deltaY !== 0) {
@@ -115,7 +115,12 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
               }
             }}
             tabIndex={0}
-            title="Use Shift+Scroll or arrow keys to scroll horizontally"
+            title="Use mouse wheel or arrow keys to scroll horizontally"
+            style={{
+              // Ensure scrollbar is always visible
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#9ca3af #e5e7eb'
+            }}
           >
             {suggestions.map((s, idx) => (
               <button
