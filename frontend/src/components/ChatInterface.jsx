@@ -118,15 +118,17 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
             title="Use mouse wheel or arrow keys to scroll horizontally"
             style={{
               // Force scrollbar to ALWAYS be visible
-              scrollbarWidth: 'thin',
-              scrollbarColor: '#6b7280 #e5e7eb',
+              scrollbarWidth: 'auto',
+              scrollbarColor: '#374151 #d1d5db',
               height: 'auto',
               minHeight: 'fit-content',
               // ALWAYS show scrollbar, even when no overflow
               overflowX: 'scroll',
               overflowY: 'hidden',
               // Force scrollbar to always appear
-              scrollbarGutter: 'stable'
+              scrollbarGutter: 'stable',
+              // Add explicit height to ensure scrollbar space
+              maxHeight: '60px'
             }}
           >
             {suggestions.map((s, idx) => (
@@ -139,6 +141,10 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
                 {s}
               </button>
             ))}
+          </div>
+          {/* Fallback: Always show a scrollbar area */}
+          <div className="h-2 bg-gray-200 dark:bg-gray-600 mx-4 rounded-full overflow-hidden">
+            <div className="h-full bg-blue-500 rounded-full w-1/3"></div>
           </div>
         </div>
       )}
