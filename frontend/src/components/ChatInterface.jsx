@@ -145,23 +145,8 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
                 {s}
               </button>
             ))}
-          </div>
-          {/* Custom scrollbar that's always visible */}
-          <div className="h-3 bg-gray-200 dark:bg-gray-600 mx-4 rounded-full overflow-hidden border border-gray-300 dark:border-gray-500">
-            <div 
-              className="h-full bg-blue-500 rounded-full transition-all duration-200 cursor-pointer hover:bg-blue-600"
-              style={{
-                width: '30%',
-                marginLeft: '0%'
-              }}
-              onClick={(e) => {
-                const container = e.currentTarget.parentElement.previousElementSibling;
-                if (container) {
-                  const scrollLeft = (container.scrollWidth - container.clientWidth) * 0.3;
-                  container.scrollLeft = scrollLeft;
-                }
-              }}
-            ></div>
+            {/* Invisible spacer to force scrollbar to always show */}
+            <div style={{ width: '1px', height: '1px', flex: '0 0 auto', opacity: 0 }}></div>
           </div>
         </div>
       )}

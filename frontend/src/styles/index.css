@@ -82,6 +82,8 @@
     border-bottom: 1px solid #d1d5db;
     /* Force scrollbar to always show */
     -webkit-scrollbar: always;
+    /* Force scrollbar to always be visible */
+    scrollbar-gutter: stable both-edges;
   }
   
   /* Force scrollbar to always be visible */
@@ -89,10 +91,21 @@
     -webkit-appearance: none;
     height: 8px;
     width: 8px;
+    display: block !important;
   }
   
   .chip-bar::-webkit-scrollbar:horizontal {
     height: 8px;
+    display: block !important;
+  }
+  
+  /* Force scrollbar to always show */
+  .chip-bar::-webkit-scrollbar-track {
+    display: block !important;
+  }
+  
+  .chip-bar::-webkit-scrollbar-thumb {
+    display: block !important;
   }
   
   .chip-bar::-webkit-scrollbar-track {
