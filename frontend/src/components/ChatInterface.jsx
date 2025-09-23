@@ -95,7 +95,28 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
       {/* Suggestions */}
       {suggestions.length > 0 && (
         <div className="px-4 pt-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-          <div className="chip-bar px-2 pb-2">
+          <div 
+            className="chip-bar px-2 pb-2"
+            onWheel={(e) => {
+              // Enable horizontal scrolling with mouse wheel
+              if (e.deltaY !== 0) {
+                e.preventDefault();
+                e.currentTarget.scrollLeft += e.deltaY;
+              }
+            }}
+            onKeyDown={(e) => {
+              // Enable keyboard navigation
+              if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                e.currentTarget.scrollLeft -= 100;
+              } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                e.currentTarget.scrollLeft += 100;
+              }
+            }}
+            tabIndex={0}
+            title="Use Shift+Scroll or arrow keys to scroll horizontally"
+          >
             {suggestions.map((s, idx) => (
               <button
                 key={idx}
