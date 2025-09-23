@@ -16,7 +16,15 @@
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/dist/$1"
+      "dest": "/frontend/dist/$1"
     }
-  ]
+  ],
+  "functions": {
+    "api/ask.js": {
+      "maxDuration": 30
+    },
+    "api/upload.js": {
+      "maxDuration": 10
+    }
+  }
 }
