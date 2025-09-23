@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Send, Bot, User } from 'lucide-react'
+import HorizontalChips from './HorizontalChips'
 
 function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) {
   const [inputMessage, setInputMessage] = useState('')
@@ -94,60 +95,11 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
 
       {/* Suggestions */}
       {suggestions.length > 0 && (
-        <div className="px-4 pt-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-          <div 
-            className="chip-bar px-2 pb-1 relative"
-            onWheel={(e) => {
-              // Enable horizontal scrolling with mouse wheel
-              if (e.deltaY !== 0) {
-                e.preventDefault();
-                e.currentTarget.scrollLeft += e.deltaY;
-              }
-            }}
-            onKeyDown={(e) => {
-              // Enable keyboard navigation
-              if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                e.currentTarget.scrollLeft -= 100;
-              } else if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                e.currentTarget.scrollLeft += 100;
-              }
-            }}
-            tabIndex={0}
-            title="Use mouse wheel or arrow keys to scroll horizontally"
-            style={{
-              // Force scrollbar to ALWAYS be visible
-              scrollbarWidth: 'auto',
-              scrollbarColor: '#374151 #d1d5db',
-              height: 'auto',
-              minHeight: 'fit-content',
-              // ALWAYS show scrollbar, even when no overflow
-              overflowX: 'scroll',
-              overflowY: 'hidden',
-              // Force scrollbar to always appear
-              scrollbarGutter: 'stable',
-              // Add explicit height to ensure scrollbar space
-              maxHeight: '60px',
-              // Force scrollbar to always show
-              WebkitScrollbar: 'always',
-              // Add padding to force scrollbar space
-              paddingBottom: '12px'
-            }}
-          >
-            {suggestions.map((s, idx) => (
-              <button
-                key={idx}
-                onClick={() => onSendMessage(s)}
-                className="text-sm px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
-                style={{ flex: '0 0 auto' }}
-              >
-                {s}
-              </button>
-            ))}
-            {/* Invisible spacer to force scrollbar to always show */}
-            <div style={{ width: '1px', height: '1px', flex: '0 0 auto', opacity: 0 }}></div>
-          </div>
+        <div className="px-4 pt-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 min-w-0">
+          <HorizontalChips 
+            items={suggestions} 
+            onItemClick={onSendMessage}
+          />
         </div>
       )}
 
