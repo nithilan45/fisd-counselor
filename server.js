@@ -47,7 +47,14 @@ app.post("/api/ask", async (req, res) => {
 
     const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
     if (!PERPLEXITY_API_KEY) {
-      return res.status(500).json({ error: 'Perplexity API key not configured' });
+      // For testing, return a mock response
+      return res.json({ 
+        success: true, 
+        answer: "This is a test response. The Perplexity API key is not configured. Please check your environment variables in Render.",
+        sources: [],
+        question: question,
+        followUps: ["How do I configure the API key?", "What are the graduation requirements?", "How do I apply for programs?"]
+      });
     }
 
     console.log(`Processing question: ${question}`);
