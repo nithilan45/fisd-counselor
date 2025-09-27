@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      "/api": "https://fisd-backend.onrender.com" // This will be updated after Render deployment
+      "/api": "https://fisd-counselor.onrender.com"
     }
   },
   build: {
