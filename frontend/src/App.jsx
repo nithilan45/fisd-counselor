@@ -51,7 +51,7 @@ function App() {
         content: m.content,
       }))
 
-      const response = await axios.post('/api/ask', { question: message, history: historyPayload })
+      const response = await axios.post('/api/ask', { question: message, conversationHistory: historyPayload })
       const botMessage = {
         id: Date.now() + 1,
         type: 'bot',

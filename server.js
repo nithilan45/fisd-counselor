@@ -20,7 +20,9 @@ app.get("/api/health", (req, res) => {
   res.json({ 
     status: "OK", 
     message: "FISD Counselor Backend is running",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    hasApiKey: !!process.env.PERPLEXITY_API_KEY,
+    apiKeyLength: process.env.PERPLEXITY_API_KEY ? process.env.PERPLEXITY_API_KEY.length : 0
   });
 });
 
