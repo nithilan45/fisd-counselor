@@ -21,11 +21,13 @@ function App() {
 
   const checkVectorStoreStatus = async () => {
     try {
-      const response = await axios.get('/api/upload')
+      // Use full URL for production, relative for development
+      const apiUrl = window.location.hostname === 'localhost' ? '/api/upload' : 'https://fisd-counselor.onrender.com/api/upload'
+      const response = await axios.get(apiUrl)
       setHasIndexedFiles(response.data.hasIndexedFiles)
     } catch (error) {
       console.error('Error checking vector store status:', error)
-      // For Vercel deployment, assume files are available
+      // For production deployment, assume files are available
       setHasIndexedFiles(true)
     }
   }
@@ -51,7 +53,9 @@ function App() {
         content: m.content,
       }))
 
-      const response = await axios.post('/api/ask', { question: message, conversationHistory: historyPayload })
+      // Use full URL for production, relative for development
+      const apiUrl = window.location.hostname === 'localhost' ? '/api/ask' : 'https://fisd-counselor.onrender.com/api/ask'
+      const response = await axios.post(apiUrl, { question: message, conversationHistory: historyPayload })
       const botMessage = {
         id: Date.now() + 1,
         type: 'bot',
