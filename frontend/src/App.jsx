@@ -103,21 +103,19 @@ function App() {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex flex-col">
+    <div className="h-screen bg-white dark:bg-gray-900 flex flex-col">
       <NavBar />
 
       {/* Debug component - remove after testing */}
       <PingTest />
 
-      <main className="flex-1 overflow-hidden mx-4 mb-4">
-        <div className="h-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <ChatInterface
-            messages={messages}
-            onSendMessage={handleSendMessage}
-            isLoading={isLoading}
-            hasIndexedFiles={hasIndexedFiles}
-          />
-        </div>
+      <main className="flex-1 overflow-hidden">
+        <ChatInterface
+          messages={messages}
+          onSendMessage={handleSendMessage}
+          isLoading={isLoading}
+          hasIndexedFiles={hasIndexedFiles}
+        />
       </main>
     </div>
   )
