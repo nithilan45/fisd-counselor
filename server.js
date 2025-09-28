@@ -8,21 +8,12 @@ const app = express();
 
 // Middleware - Allow all origins for now to fix the issue
 app.use(cors({
-  origin: true, // Allow all origins
+  origin: '*', // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
-  credentials: true,
+  credentials: false, // Set to false when using origin: '*'
   optionsSuccessStatus: 200 // Some legacy browsers choke on 204
 }));
-
-// Handle preflight requests explicitly
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
-});
 app.use(express.json());
 
 // Simple test route
