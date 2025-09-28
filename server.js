@@ -14,6 +14,16 @@ app.use(cors({
   credentials: false, // Set to false when using origin: '*'
   optionsSuccessStatus: 200 // Some legacy browsers choke on 204
 }));
+
+// Manual OPTIONS handler for CORS preflight
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
+  res.header('Access-Control-Allow-Credentials', 'false');
+  res.sendStatus(200);
+});
+
 app.use(express.json());
 
 // Simple test route
