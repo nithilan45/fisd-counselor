@@ -57,7 +57,9 @@ function App() {
       console.log('Sending request to:', 'https://fisd-counselor.onrender.com/api/ask')
       console.log('Payload:', { question: message, conversationHistory: historyPayload })
       
-      const response = await axios.post('https://fisd-counselor.onrender.com/api/ask', { question: message, conversationHistory: historyPayload })
+      const response = await axios.post('https://fisd-counselor.onrender.com/api/ask', { question: message, conversationHistory: historyPayload }, {
+        timeout: 30000 // 30 second timeout for Render cold starts
+      })
       console.log('Response received:', response.data)
       const botMessage = {
         id: Date.now() + 1,
@@ -78,7 +80,9 @@ function App() {
       })
       
       let errorMessage = 'Sorry, I encountered an error. Please try again.'
-      if (error.response?.status === 0) {
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        errorMessage = 'Request timed out. The server may be slow to respond. Please try again.'
+      } else if (error.response?.status === 0) {
         errorMessage = 'Network error: Cannot connect to server. Please check your internet connection.'
       } else if (error.response?.status >= 500) {
         errorMessage = 'Server error. Please try again in a moment.'
