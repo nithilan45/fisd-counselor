@@ -54,7 +54,11 @@ function App() {
       }))
 
       // Always use Render backend directly
+      console.log('Sending request to:', 'https://fisd-counselor.onrender.com/api/ask')
+      console.log('Payload:', { question: message, conversationHistory: historyPayload })
+      
       const response = await axios.post('https://fisd-counselor.onrender.com/api/ask', { question: message, conversationHistory: historyPayload })
+      console.log('Response received:', response.data)
       const botMessage = {
         id: Date.now() + 1,
         type: 'bot',
@@ -66,14 +70,30 @@ function App() {
       setMessages(prev => [...prev, botMessage])
     } catch (error) {
       console.error('Error asking question:', error)
-      const errorMessage = {
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        statusText: error.response?.statusText
+      })
+      
+      let errorMessage = 'Sorry, I encountered an error. Please try again.'
+      if (error.response?.status === 0) {
+        errorMessage = 'Network error: Cannot connect to server. Please check your internet connection.'
+      } else if (error.response?.status >= 500) {
+        errorMessage = 'Server error. Please try again in a moment.'
+      } else if (error.response?.status === 404) {
+        errorMessage = 'API endpoint not found. Please contact support.'
+      }
+      
+      const errorMessageObj = {
         id: Date.now() + 1,
         type: 'bot',
-        content: 'Sorry, I encountered an error. Please try again.',
+        content: errorMessage,
         error: true,
         timestamp: new Date()
       }
-      setMessages(prev => [...prev, errorMessage])
+      setMessages(prev => [...prev, errorMessageObj])
     } finally {
       setIsLoading(false)
     }

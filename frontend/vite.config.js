@@ -11,10 +11,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
-    proxy: {
-      "/api": "https://fisd-counselor.onrender.com"
-    }
+    port: 3000
   },
   build: {
     outDir: "dist"

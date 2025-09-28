@@ -6,16 +6,9 @@ const axios = require("axios");
 
 const app = express();
 
-// Middleware
+// Middleware - Allow all origins for now to fix the issue
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:3001', 
-    'http://localhost:3002',
-    'http://localhost:3003',
-    'https://*.netlify.app',
-    'https://*.vercel.app'
-  ],
+  origin: true, // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
   credentials: true
