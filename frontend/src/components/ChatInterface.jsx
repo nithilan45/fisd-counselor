@@ -1,11 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Send, User } from 'lucide-react'
-import HorizontalChips from './HorizontalChips'
 
 function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) {
   const [inputMessage, setInputMessage] = useState('')
   const messagesEndRef = useRef(null)
-  const [suggestions, setSuggestions] = useState([])
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -13,13 +11,6 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
 
   useEffect(() => {
     scrollToBottom()
-    // Update suggestions from the latest bot message if present
-    const last = [...messages].reverse().find(m => m.type === 'bot')
-    if (last && Array.isArray(last.followUps)) {
-      setSuggestions(last.followUps)
-    } else {
-      setSuggestions([])
-    }
   }, [messages])
 
   const handleSubmit = (e) => {
@@ -78,15 +69,6 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Suggestions */}
-      {suggestions.length > 0 && (
-        <div className="px-4 pt-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 min-w-0">
-          <HorizontalChips 
-            items={suggestions} 
-            onItemClick={onSendMessage}
-          />
-        </div>
-      )}
 
       {/* Input Area */}
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">

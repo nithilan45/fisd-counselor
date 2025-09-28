@@ -158,19 +158,11 @@ app.post("/api/ask", async (req, res) => {
         title: citation.title || 'Web Source'
       })) : [];
 
-    // Simple static follow-up questions - no AI generation to avoid errors
-    const followUps = [
-      "What are the requirements for this?",
-      "How do I apply for this?",
-      "What are the benefits of this program?"
-    ];
-
     res.json({ 
       success: true, 
       answer, 
       sources, 
-      question, 
-      followUps 
+      question
     });
 
   } catch (error) {

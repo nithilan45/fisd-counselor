@@ -66,7 +66,6 @@ function App() {
         type: 'bot',
         content: response.data.answer,
         sources: response.data.sources || [],
-        followUps: response.data.followUps || [],
         timestamp: new Date()
       }
       setMessages(prev => [...prev, botMessage])
