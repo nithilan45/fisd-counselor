@@ -68,36 +68,42 @@ export default function PingTest() {
   }, [retryCount]);
 
   return (
-    <div style={{ 
-      padding: '20px', 
-      margin: '20px', 
-      border: '1px solid #ccc', 
-      borderRadius: '8px',
-      backgroundColor: '#f9f9f9'
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-        <h3 style={{ margin: 0 }}>Backend Connection Test</h3>
-        <button 
-          onClick={() => setRetryCount(prev => prev + 1)}
-          style={{
-            padding: '5px 10px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          Retry
-        </button>
+    <div className="mx-4 mt-4 mb-2">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Backend Connection Test</h3>
+          </div>
+          <button
+            onClick={() => setRetryCount(prev => prev + 1)}
+            className="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+        {loading && (
+          <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <span>Testing connection... (attempt {retryCount + 1})</span>
+          </div>
+        )}
+        {err && (
+          <div className="flex items-center space-x-2 text-sm text-red-600 dark:text-red-400">
+            <div className="w-4 h-4 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+              <span className="text-xs">!</span>
+            </div>
+            <span>Error: {err}</span>
+          </div>
+        )}
+        {data && (
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+            <pre className="text-xs text-gray-700 dark:text-gray-300 whitespace-pre-wrap overflow-x-auto">
+              {JSON.stringify(data, null, 2)}
+            </pre>
+          </div>
+        )}
       </div>
-      {loading && <p>Testing connection... (attempt {retryCount + 1})</p>}
-      {err && <p style={{ color: 'red' }}>Error: {err}</p>}
-      {data && (
-        <pre style={{ whiteSpace: "pre-wrap", fontSize: '12px' }}>
-          {JSON.stringify(data, null, 2)}
-        </pre>
-      )}
     </div>
   );
 }
