@@ -62,8 +62,36 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
                   {/* Message Content */}
                   <div className="flex-1 min-w-0">
                     <div className="prose prose-gray dark:prose-invert max-w-none">
-                      <div className="text-gray-900 dark:text-gray-100 leading-7 whitespace-pre-wrap">
-                        {message.content}
+                      <div className="text-gray-900 dark:text-gray-100 leading-7">
+                        {message.content.split('\n\n').map((section, sectionIndex) => {
+                          // Check if this section looks like a header (short line, ends with colon, or is all caps)
+                          const isHeader = section.length < 150 && (
+                            section.includes(':') && section.length < 100 ||
+                            section.match(/^[A-Z\s]+$/) ||
+                            section.match(/^\d+\.\s*[A-Z]/) ||
+                            section.match(/^[•\-\*]\s*[A-Z]/)
+                          );
+                          
+                          if (isHeader) {
+                            return (
+                              <div key={sectionIndex}>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 mt-6 first:mt-0">
+                                  {section}
+                                </h3>
+                                <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mb-4"></div>
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div key={sectionIndex} className="mb-6">
+                                <div className="whitespace-pre-wrap">{section}</div>
+                                {sectionIndex < message.content.split('\n\n').length - 1 && (
+                                  <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mt-4"></div>
+                                )}
+                              </div>
+                            );
+                          }
+                        })}
                       </div>
                       
                       {/* Sources */}
