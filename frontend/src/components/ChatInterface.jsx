@@ -62,87 +62,8 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
                   {/* Message Content */}
                   <div className="flex-1 min-w-0">
                     <div className="prose prose-gray dark:prose-invert max-w-none">
-                      <div className="text-gray-900 dark:text-gray-100 leading-7">
-                        {message.content.split('\n\n').map((section, sectionIndex) => {
-                          // Check if this section looks like a header (short line, possibly with numbers or bullets)
-                          const isHeader = section.length < 100 && (
-                            section.match(/^\d+\./) || 
-                            section.match(/^[A-Z][^.!?]*$/) ||
-                            section.match(/^[•\-\*]\s/) ||
-                            section.includes(':') && section.length < 80
-                          );
-                          
-                          // Check if this section is a list
-                          const isList = section.split('\n').some(line => 
-                            line.match(/^\d+\./) || 
-                            line.match(/^[•\-\*]\s/) ||
-                            line.match(/^[a-z]\)\s/)
-                          );
-                          
-                          if (isHeader) {
-                            return (
-                              <h3 key={sectionIndex} className="text-lg font-semibold text-gray-900 dark:text-white mb-3 mt-6 first:mt-0">
-                                {section}
-                              </h3>
-                            );
-                          } else if (isList) {
-                            return (
-                              <div key={sectionIndex} className="mb-4">
-                                {section.split('\n').map((line, lineIndex) => {
-                                  if (line.trim() === '') return null;
-                                  
-                                  // Check for numbered list
-                                  if (line.match(/^\d+\./)) {
-                                    return (
-                                      <div key={lineIndex} className="flex mb-2">
-                                        <span className="font-medium text-gray-700 dark:text-gray-300 mr-2 min-w-[2rem]">
-                                          {line.match(/^\d+\./)[0]}
-                                        </span>
-                                        <span className="flex-1">{line.replace(/^\d+\.\s*/, '')}</span>
-                                      </div>
-                                    );
-                                  }
-                                  
-                                  // Check for bullet list
-                                  if (line.match(/^[•\-\*]\s/)) {
-                                    return (
-                                      <div key={lineIndex} className="flex mb-2">
-                                        <span className="text-gray-500 dark:text-gray-400 mr-3 mt-1">•</span>
-                                        <span className="flex-1">{line.replace(/^[•\-\*]\s*/, '')}</span>
-                                      </div>
-                                    );
-                                  }
-                                  
-                                  // Check for lettered list
-                                  if (line.match(/^[a-z]\)\s/)) {
-                                    return (
-                                      <div key={lineIndex} className="flex mb-2">
-                                        <span className="font-medium text-gray-700 dark:text-gray-300 mr-2 min-w-[1.5rem]">
-                                          {line.match(/^[a-z]\)/)[0]}
-                                        </span>
-                                        <span className="flex-1">{line.replace(/^[a-z]\)\s*/, '')}</span>
-                                      </div>
-                                    );
-                                  }
-                                  
-                                  // Regular paragraph
-                                  return (
-                                    <p key={lineIndex} className="mb-2">
-                                      {line}
-                                    </p>
-                                  );
-                                })}
-                              </div>
-                            );
-                          } else {
-                            // Regular paragraph section
-                            return (
-                              <p key={sectionIndex} className="mb-4">
-                                {section}
-                              </p>
-                            );
-                          }
-                        })}
+                      <div className="text-gray-900 dark:text-gray-100 leading-7 whitespace-pre-wrap">
+                        {message.content}
                       </div>
                       
                       {/* Sources */}

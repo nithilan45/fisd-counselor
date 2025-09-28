@@ -114,19 +114,7 @@ app.post("/api/ask", async (req, res) => {
           const messages = [
             {
               role: 'system',
-              content: `You are a helpful FISD (Frisco Independent School District) counselor assistant. Answer questions about FISD policies, procedures, and academic guidance. 
-
-IMPORTANT FORMATTING RULES:
-- Structure your responses with clear sections and headers
-- Use numbered lists (1., 2., 3.) for step-by-step processes
-- Use bullet points (•) for lists of items or features
-- Use lettered lists (a), b), c)) for sub-categories
-- Break up long responses into digestible sections
-- Use headers like "Academic Requirements:", "Important Deadlines:", "Next Steps:", etc.
-- Make responses scannable and easy to read
-- Be comprehensive but organized
-
-Give detailed, comprehensive answers that are well-structured and easy to follow.`
+              content: `You are a helpful FISD (Frisco Independent School District) counselor assistant. Answer questions about FISD policies, procedures, and academic guidance. Give detailed, comprehensive answers. Be conversational and helpful. Use clear formatting with proper line breaks and structure your responses well.`
             },
             {
               role: 'user',
@@ -148,16 +136,15 @@ Give detailed, comprehensive answers that are well-structured and easy to follow
 
     let answer = perplexityResponse.data.choices[0].message.content;
 
-    // Clean up formatting while preserving structure
+    // Clean up the response
     answer = answer
-      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold formatting
-      .replace(/\*(.*?)\*/g, '$1') // Remove italic formatting
-      .replace(/#{1,6}\s*/g, '') // Remove markdown headers
-      .replace(/\n\s*\n\s*\n/g, '\n\n') // Normalize multiple newlines
-      .replace(/\|.*\|/g, '') // Remove table formatting
-      .replace(/---+/g, '') // Remove horizontal rules
-      .replace(/\[.*?\]/g, '') // Remove markdown links
-      .replace(/\n\s*\n/g, '\n\n') // Ensure proper paragraph spacing
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/#{1,6}\s*/g, '')
+      .replace(/\n\s*\n\s*\n/g, '\n\n')
+      .replace(/\|.*\|/g, '')
+      .replace(/---+/g, '')
+      .replace(/\[.*?\]/g, '')
       .trim();
 
     const sources = perplexityResponse.data.choices[0].message.citations ?
