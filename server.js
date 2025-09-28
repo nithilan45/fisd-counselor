@@ -27,7 +27,7 @@ app.use(express.json());
 
 // Simple test route
 app.get("/", (req, res) => {
-  res.send("FISD Counselor Backend is running on Render ✅");
+  res.send("FISD Counselor Backend is running on Render ✅ - CORS Fixed");
 });
 
 // Health check
