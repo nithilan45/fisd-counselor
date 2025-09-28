@@ -172,12 +172,46 @@ app.post("/api/ask", async (req, res) => {
         title: citation.title || 'Web Source'
       })) : [];
 
-    // Generate simple follow-up questions
-    const followUps = [
-      "What are the requirements for this?",
-      "How do I apply for this?",
-      "What are the benefits of this program?"
-    ];
+    // Generate dynamic follow-up questions based on the conversation
+    const followUpPrompt = `Based on the following conversation and the last answer, generate exactly three very short, concise, and relevant follow-up questions. Do not number them or add any introductory phrases. Just provide the questions separated by newlines.
+
+Conversation:
+${historyMessages}User: ${question}
+Assistant: ${answer}
+
+Follow-up questions:`;
+
+    let followUps = [];
+    try {
+      const followUpResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
+        model: 'sonar-pro',
+        messages: [{ role: 'user', content: followUpPrompt }],
+        max_tokens: 100,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
+
+      if (followUpResponse.data.choices && followUpResponse.data.choices[0] && followUpResponse.data.choices[0].message) {
+        const rawFollowUps = followUpResponse.data.choices[0].message.content;
+        followUps = rawFollowUps
+          .split('\n')
+          .map(q => q.replace(/^\s*[-*+\d\.]*\s*/, '').trim())
+          .filter(q => q.length > 5)
+          .slice(0, 3);
+      }
+    } catch (error) {
+      console.error('Error generating follow-ups:', error);
+      // Fallback to generic questions if AI generation fails
+      followUps = [
+        "What are the requirements for this?",
+        "How do I apply for this?",
+        "What are the benefits of this program?"
+      ];
+    }
 
     res.json({ 
       success: true, 
