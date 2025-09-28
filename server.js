@@ -8,9 +8,17 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: '*',
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001', 
+    'http://localhost:3002',
+    'http://localhost:3003',
+    'https://*.netlify.app',
+    'https://*.vercel.app'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+  credentials: true
 }));
 app.use(express.json());
 
@@ -21,12 +29,22 @@ app.get("/", (req, res) => {
 
 // Health check
 app.get("/api/health", (req, res) => {
-  res.json({ 
-    status: "OK", 
+  res.json({
+    status: "OK",
     message: "FISD Counselor Backend is running",
     timestamp: new Date().toISOString(),
     hasApiKey: !!process.env.PERPLEXITY_API_KEY,
     apiKeyLength: process.env.PERPLEXITY_API_KEY ? process.env.PERPLEXITY_API_KEY.length : 0
+  });
+});
+
+// Test endpoint for debugging
+app.get("/api/hello", (req, res) => {
+  res.json({ 
+    ok: true, 
+    msg: "Hello from Render ✅",
+    timestamp: new Date().toISOString(),
+    origin: req.get('origin') || 'no-origin'
   });
 });
 

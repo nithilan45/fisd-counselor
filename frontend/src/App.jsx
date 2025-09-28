@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import NavBar from './components/NavBar'
 import ChatInterface from './components/ChatInterface'
+import PingTest from './components/PingTest'
 import axios from 'axios'
 
 function App() {
@@ -21,9 +22,8 @@ function App() {
 
   const checkVectorStoreStatus = async () => {
     try {
-      // Use full URL for production, relative for development
-      const apiUrl = window.location.hostname === 'localhost' ? '/api/upload' : 'https://fisd-counselor.onrender.com/api/upload'
-      const response = await axios.get(apiUrl)
+      // Always use Render backend directly
+      const response = await axios.get('https://fisd-counselor.onrender.com/api/upload')
       setHasIndexedFiles(response.data.hasIndexedFiles)
     } catch (error) {
       console.error('Error checking vector store status:', error)
@@ -53,9 +53,8 @@ function App() {
         content: m.content,
       }))
 
-      // Use full URL for production, relative for development
-      const apiUrl = window.location.hostname === 'localhost' ? '/api/ask' : 'https://fisd-counselor.onrender.com/api/ask'
-      const response = await axios.post(apiUrl, { question: message, conversationHistory: historyPayload })
+      // Always use Render backend directly
+      const response = await axios.post('https://fisd-counselor.onrender.com/api/ask', { question: message, conversationHistory: historyPayload })
       const botMessage = {
         id: Date.now() + 1,
         type: 'bot',
@@ -83,6 +82,9 @@ function App() {
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <NavBar />
+      
+      {/* Debug component - remove after testing */}
+      <PingTest />
       
       <main className="flex-1 overflow-hidden">
         <ChatInterface 
