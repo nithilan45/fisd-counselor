@@ -24,7 +24,7 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
   return (
     <div className="flex flex-col h-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto p-6 space-y-8">
         {messages.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
@@ -51,9 +51,9 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
           messages.map((message) => (
             <div
               key={message.id}
-              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} w-full`}
             >
-              <div className={`flex items-start space-x-3 max-w-3xl ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+              <div className={`flex items-start space-x-3 w-full max-w-4xl ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                 {/* Avatar */}
                 <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
                   message.type === 'user' 
@@ -69,12 +69,12 @@ function ChatInterface({ messages, onSendMessage, isLoading, hasIndexedFiles }) 
                 
                 {/* Message Content */}
                 <div className={`flex-1 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
-                  <div className={`inline-block px-6 py-4 rounded-2xl shadow-sm ${
+                  <div className={`block px-6 py-4 rounded-2xl shadow-sm ${
                     message.type === 'user'
-                      ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white'
-                      : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700'
+                      ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white max-w-[80%] ml-auto'
+                      : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 max-w-[90%]'
                   }`}>
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">{message.content}</p>
                     
                     {/* Sources */}
                     {message.sources && message.sources.length > 0 && (
