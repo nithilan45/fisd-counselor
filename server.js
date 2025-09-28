@@ -41,6 +41,14 @@ app.get("/api/hello", (req, res) => {
   });
 });
 
+// Keep-alive endpoint to prevent cold starts
+app.get("/api/ping", (req, res) => {
+  res.json({ 
+    status: "alive",
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Upload endpoint
 app.get("/api/upload", (req, res) => {
   res.json({ 
