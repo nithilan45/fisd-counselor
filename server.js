@@ -114,23 +114,7 @@ app.post("/api/ask", async (req, res) => {
     const messages = [
       {
         role: 'system',
-        content: `You are a helpful FISD (Frisco Independent School District) counselor assistant.
-        Answer questions about FISD policies, procedures, and academic guidance using web search.
-
-        CRITICAL INSTRUCTIONS:
-        - Give COMPREHENSIVE, DETAILED answers that fully address the question
-        - Include ALL relevant information, examples, and specifics
-        - When listing activities, programs, or requirements, be THOROUGH and complete
-        - NO formatting symbols like asterisks, bullets, dashes, or markdown
-        - NO tables, headers, or complex formatting
-        - NO "Based on my search" or "According to" phrases
-        - Just answer the question directly and comprehensively
-        - Keep it conversational and human-like
-        - If you need to list items, use simple text like "Activities include: item 1, item 2, item 3, item 4, item 5"
-        - Be as detailed as possible while staying readable
-        - Always provide sources at the end in simple format
-
-        Use the conversation context to understand references and maintain topic continuity.`
+        content: `You are a helpful FISD (Frisco Independent School District) counselor assistant. Answer questions about FISD policies, procedures, and academic guidance. Give detailed, comprehensive answers. Be conversational and helpful.`
       },
       {
         role: 'user',
@@ -146,7 +130,8 @@ app.post("/api/ask", async (req, res) => {
         'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-      }
+      },
+      timeout: 20000 // 20 second timeout
     });
 
     let answer = perplexityResponse.data.choices[0].message.content;
@@ -173,55 +158,12 @@ app.post("/api/ask", async (req, res) => {
         title: citation.title || 'Web Source'
       })) : [];
 
-    // Generate dynamic follow-up questions based on the conversation
-    const fullConversation = historyMessages + `User: ${question}\nAssistant: ${answer}`;
-    console.log('Full conversation for follow-ups:', fullConversation);
-    
-    const followUpPrompt = `Based on the following conversation, generate exactly three very short, concise, and relevant follow-up questions. Do not number them or add any introductory phrases. Just provide the questions separated by newlines.
-
-Conversation:
-${fullConversation}
-
-Follow-up questions:`;
-
-    let followUps = [
+    // Simple static follow-up questions - no AI generation to avoid errors
+    const followUps = [
       "What are the requirements for this?",
       "How do I apply for this?",
       "What are the benefits of this program?"
     ];
-
-    try {
-      const followUpResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
-        model: 'sonar-pro',
-        messages: [{ role: 'user', content: followUpPrompt }],
-        max_tokens: 100,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        timeout: 15000 // 15 second timeout for follow-up generation
-      });
-
-      if (followUpResponse.data.choices && followUpResponse.data.choices[0] && followUpResponse.data.choices[0].message) {
-        const rawFollowUps = followUpResponse.data.choices[0].message.content;
-        console.log('Raw follow-ups from AI:', rawFollowUps);
-        const dynamicFollowUps = rawFollowUps
-          .split('\n')
-          .map(q => q.replace(/^\s*[-*+\d\.]*\s*/, '').trim())
-          .filter(q => q.length > 5)
-          .slice(0, 3);
-        
-        if (dynamicFollowUps.length > 0) {
-          followUps = dynamicFollowUps;
-        }
-        console.log('Processed follow-ups:', followUps);
-      }
-    } catch (error) {
-      console.error('Error generating follow-ups:', error);
-      // Keep the default follow-ups if generation fails
-    }
 
     res.json({ 
       success: true, 
