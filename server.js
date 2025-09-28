@@ -183,7 +183,12 @@ ${fullConversation}
 
 Follow-up questions:`;
 
-    let followUps = [];
+    let followUps = [
+      "What are the requirements for this?",
+      "How do I apply for this?",
+      "What are the benefits of this program?"
+    ];
+
     try {
       const followUpResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
         model: 'sonar-pro',
@@ -194,27 +199,27 @@ Follow-up questions:`;
           'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json'
-        }
+        },
+        timeout: 15000 // 15 second timeout for follow-up generation
       });
 
       if (followUpResponse.data.choices && followUpResponse.data.choices[0] && followUpResponse.data.choices[0].message) {
         const rawFollowUps = followUpResponse.data.choices[0].message.content;
         console.log('Raw follow-ups from AI:', rawFollowUps);
-        followUps = rawFollowUps
+        const dynamicFollowUps = rawFollowUps
           .split('\n')
           .map(q => q.replace(/^\s*[-*+\d\.]*\s*/, '').trim())
           .filter(q => q.length > 5)
           .slice(0, 3);
+        
+        if (dynamicFollowUps.length > 0) {
+          followUps = dynamicFollowUps;
+        }
         console.log('Processed follow-ups:', followUps);
       }
     } catch (error) {
       console.error('Error generating follow-ups:', error);
-      // Fallback to generic questions if AI generation fails
-      followUps = [
-        "What are the requirements for this?",
-        "How do I apply for this?",
-        "What are the benefits of this program?"
-      ];
+      // Keep the default follow-ups if generation fails
     }
 
     res.json({ 
