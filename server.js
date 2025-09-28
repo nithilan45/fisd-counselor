@@ -11,8 +11,18 @@ app.use(cors({
   origin: true, // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
-  credentials: true
+  credentials: true,
+  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
 }));
+
+// Handle preflight requests explicitly
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
 app.use(express.json());
 
 // Simple test route
@@ -47,6 +57,17 @@ app.get("/api/ping", (req, res) => {
     status: "alive",
     timestamp: new Date().toISOString()
   });
+});
+
+// Simple JSONP endpoint for testing (bypasses CORS)
+app.get("/api/test", (req, res) => {
+  const callback = req.query.callback || 'callback';
+  const data = { 
+    status: "ok", 
+    message: "CORS test successful",
+    timestamp: new Date().toISOString()
+  };
+  res.send(`${callback}(${JSON.stringify(data)});`);
 });
 
 // Upload endpoint
