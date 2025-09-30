@@ -31,7 +31,7 @@ function App() {
     }
   }
 
-  const handleSendMessage = async (message) => {
+  const handleSendMessage = async (message, retryCount = 0) => {
     if (!message.trim() || isLoading) return
 
     // Add user message
@@ -47,17 +47,20 @@ function App() {
     try {
       // Build compact history for context
       const historyPayload = messages.map(m => ({
-        role: m.type === 'bot' ? 'assistant' : 'user',
-        type: m.type,
+        type: m.type === 'bot' ? 'assistant' : 'user',
         content: m.content,
       }))
 
       // Always use Render backend directly
       console.log('Sending request to:', 'https://fisd-counselor.onrender.com/api/ask')
       console.log('Payload:', { question: message, conversationHistory: historyPayload })
+      console.log('Retry attempt:', retryCount + 1)
       
       const response = await axios.post('https://fisd-counselor.onrender.com/api/ask', { question: message, conversationHistory: historyPayload }, {
-        timeout: 30000 // 30 second timeout for Render cold starts
+        timeout: 60000, // 60 second timeout for Render cold starts
+        headers: {
+          'Content-Type': 'application/json',
+        }
       })
       console.log('Response received:', response.data)
       const botMessage = {
@@ -77,13 +80,22 @@ function App() {
         statusText: error.response?.statusText
       })
       
+      // Retry logic for timeout or server errors
+      if (retryCount < 2 && (error.code === 'ECONNABORTED' || error.message.includes('timeout') || error.response?.status >= 500)) {
+        console.log('Retrying request...')
+        setTimeout(() => {
+          handleSendMessage(message, retryCount + 1)
+        }, 2000 * (retryCount + 1)) // Exponential backoff: 2s, 4s
+        return
+      }
+      
       let errorMessage = 'Sorry, I encountered an error. Please try again.'
       if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-        errorMessage = 'Request timed out. The server may be slow to respond. Please try again.'
+        errorMessage = 'Request timed out after multiple attempts. The server may be experiencing issues. Please try again later.'
       } else if (error.response?.status === 0) {
         errorMessage = 'Network error: Cannot connect to server. Please check your internet connection.'
       } else if (error.response?.status >= 500) {
-        errorMessage = 'Server error. Please try again in a moment.'
+        errorMessage = 'Server error after multiple attempts. Please try again in a moment.'
       } else if (error.response?.status === 404) {
         errorMessage = 'API endpoint not found. Please contact support.'
       }

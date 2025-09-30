@@ -150,7 +150,7 @@ app.post("/api/ask", async (req, res) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      timeout: 20000 // 20 second timeout
+      timeout: 45000 // 45 second timeout for Perplexity API
     });
 
     let answer = perplexityResponse.data.choices[0].message.content;
@@ -182,8 +182,23 @@ app.post("/api/ask", async (req, res) => {
 
   } catch (error) {
     console.error('Ask error:', error.response ? error.response.data : error.message);
-    res.status(500).json({
-      error: 'Failed to process question',
+    
+    let errorMessage = 'Failed to process question';
+    let statusCode = 500;
+    
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      errorMessage = 'Request timed out. The AI service is taking longer than expected.';
+      statusCode = 408; // Request Timeout
+    } else if (error.response?.status === 401) {
+      errorMessage = 'API authentication failed.';
+      statusCode = 500;
+    } else if (error.response?.status === 429) {
+      errorMessage = 'Rate limit exceeded. Please try again in a moment.';
+      statusCode = 429;
+    }
+    
+    res.status(statusCode).json({
+      error: errorMessage,
       details: error.response ? error.response.data : error.message
     });
   }
