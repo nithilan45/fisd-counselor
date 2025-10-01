@@ -3,8 +3,51 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const axios = require("axios");
+const pdf = require("pdf-parse");
 
 const app = express();
+
+// CTE detection keywords
+const CTE_KEYWORDS = [
+  'cte', 'career pathways', 'prerequisites', 'career and technical education',
+  'workforce programs', 'certifications', 'trade programs', 'vocational',
+  'agriculture', 'architecture', 'business', 'education', 'engineering',
+  'health', 'hospitality', 'information technology', 'law', 'arts',
+  'audio video technology', 'communications', 'career cluster'
+];
+
+// Function to detect if question is CTE-related
+function isCTERelated(question) {
+  const lowerQuestion = question.toLowerCase();
+  return CTE_KEYWORDS.some(keyword => lowerQuestion.includes(keyword));
+}
+
+// Function to parse CTE PDFs
+async function parseCTEPDFs() {
+  try {
+    const cteDir = path.join(__dirname, 'cte-pdfs');
+    const files = await fs.readdir(cteDir);
+    const pdfFiles = files.filter(file => file.endsWith('.pdf'));
+    
+    let cteContent = '';
+    
+    for (const file of pdfFiles) {
+      try {
+        const filePath = path.join(cteDir, file);
+        const dataBuffer = await fs.readFile(filePath);
+        const pdfData = await pdf(dataBuffer);
+        cteContent += `\n\n--- ${file} ---\n${pdfData.text}`;
+      } catch (error) {
+        console.error(`Error parsing ${file}:`, error.message);
+      }
+    }
+    
+    return cteContent;
+  } catch (error) {
+    console.error('Error reading CTE PDFs:', error.message);
+    return '';
+  }
+}
 
 // Middleware - Allow all origins for now to fix the issue
 app.use(cors({
@@ -104,11 +147,23 @@ app.post("/api/ask", async (req, res) => {
 
     console.log(`Processing question: ${question}`);
 
+    // Check if question is CTE-related
+    const isCTE = isCTERelated(question);
+    console.log(`CTE-related question: ${isCTE}`);
+
     // Build conversation history for context
     let historyMessages = '';
     if (conversationHistory && conversationHistory.length > 0) {
       historyMessages = conversationHistory.map(msg => `${msg.type === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n');
       historyMessages = `\n\nPrevious conversation:\n${historyMessages}\n\n`;
+    }
+
+    // Get CTE content if needed
+    let cteContent = '';
+    if (isCTE) {
+      console.log('Parsing CTE PDFs...');
+      cteContent = await parseCTEPDFs();
+      console.log(`CTE content length: ${cteContent.length} characters`);
     }
 
     const messages = [
@@ -122,7 +177,7 @@ app.post("/api/ask", async (req, res) => {
         - Be specific to FISD but concise
         - Focus on key requirements only
         - No lengthy explanations
-        - Always mention FISD specifically`
+        - Always mention FISD specifically${isCTE ? '\n\nCTE INFORMATION:\n' + cteContent : ''}`
       },
             {
               role: 'user',
