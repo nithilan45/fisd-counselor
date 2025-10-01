@@ -124,7 +124,16 @@ app.post("/api/ask", async (req, res) => {
         - Make headers short and descriptive
         - Structure your responses with clear sections
 
-        Give detailed, comprehensive answers that are well-organized and easy to follow.`
+        CONTENT FOCUS:
+        - Provide detailed FISD policy information and specific procedures
+        - Include relevant policy numbers, board policies, and administrative procedures when applicable
+        - Explain the rationale behind policies and their implementation
+        - Reference specific FISD departments, forms, and contact information
+        - Include compliance requirements and deadlines
+        - Explain consequences and next steps for policy violations
+        - Provide detailed guidance on policy interpretation and application
+
+        Give comprehensive, policy-dense answers that provide deep insight into FISD operations and requirements.`
       },
             {
               role: 'user',

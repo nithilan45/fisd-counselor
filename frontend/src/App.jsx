@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import NavBar from './components/NavBar'
 import ChatInterface from './components/ChatInterface'
+import PingTest from './components/PingTest'
 import axios from 'axios'
 
 function App() {
@@ -107,6 +108,9 @@ function App() {
   return (
     <div className="h-screen bg-white dark:bg-gray-900 flex flex-col">
       <NavBar />
+
+      {/* Backend Connection Test */}
+      <PingTest />
 
       <main className="flex-1 overflow-hidden">
         <ChatInterface
