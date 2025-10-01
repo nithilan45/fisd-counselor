@@ -4,6 +4,7 @@ const path = require("path");
 const cors = require("cors");
 const axios = require("axios");
 const pdf = require("pdf-parse");
+const fs = require('fs').promises;
 
 const app = express();
 
@@ -22,27 +23,90 @@ function isCTERelated(question) {
   return CTE_KEYWORDS.some(keyword => lowerQuestion.includes(keyword));
 }
 
-// Function to parse CTE PDFs
-async function parseCTEPDFs() {
+// Choose which source to try first based on question
+function choosePrimarySource(question) {
+  const q = question.toLowerCase();
+  const likelyCTE = isCTERelated(q) || /pathway|cluster|cte|prereq|cert/i.test(q);
+  const likelyROTC = /rotc|jrotc/i.test(q); // likely not in our CTE PDFs
+  if (likelyROTC) return 'web';
+  return likelyCTE ? 'pdf' : 'web';
+}
+
+// Select subset of PDFs based on cluster hints in question and filenames
+async function selectCTEPdfFiles(question) {
+  const cteDir = path.join(__dirname, 'cte-pdfs');
+  let files = [];
   try {
-    const cteDir = path.join(__dirname, 'cte-pdfs');
-    const files = await fs.readdir(cteDir);
-    const pdfFiles = files.filter(file => file.endsWith('.pdf'));
-    
-    let cteContent = '';
-    
-    for (const file of pdfFiles) {
+    files = await fs.readdir(cteDir);
+  } catch (_) {
+    return [];
+  }
+  const pdfFiles = files.filter(f => f.toLowerCase().endsWith('.pdf'));
+  const q = question.toLowerCase();
+  const clusters = [
+    { key: 'agriculture', match: /agri|animal|plant|floral/ },
+    { key: 'architecture', match: /architec|construction|design/i },
+    { key: 'business', match: /business|marketing|finance/i },
+    { key: 'education', match: /education|teaching|teacher/i },
+    { key: 'engineering', match: /engineer|stem|robot|manufactur/i },
+    { key: 'health', match: /health|medical|nurse|bio/i },
+    { key: 'hospitality', match: /hospitality|tourism|culinary|hotel/i },
+    { key: 'information-technology', match: /it|information\s*tech|cyber|programming|software|network/i },
+    { key: 'law', match: /law|public\s*service|security|criminal/i },
+    { key: 'arts', match: /arts|audio|video|communication|media/i }
+  ];
+  const matchedCluster = clusters.find(c => c.match.test(q));
+  if (matchedCluster) {
+    const subset = pdfFiles.filter(f => f.toLowerCase().includes(matchedCluster.key));
+    if (subset.length > 0) return subset.map(f => path.join(cteDir, f));
+  }
+  // Fallback: if question mentions CTE but no specific cluster
+  if (isCTERelated(q)) {
+    return pdfFiles.slice(0, 3).map(f => path.join(cteDir, f)); // limit for speed
+  }
+  return [];
+}
+
+// Extract short, relevant snippets from PDF text
+function extractSnippetsFromText(fullText, question, maxChars = 1200) {
+  if (!fullText) return '';
+  const q = question.toLowerCase().split(/\W+/).filter(w => w.length > 3);
+  const sentences = fullText.split(/\n+|(?<=[.!?])\s+/);
+  const scored = sentences.map(s => {
+    const ls = s.toLowerCase();
+    const score = q.reduce((acc, w) => acc + (ls.includes(w) ? 1 : 0), 0) + (s.length < 200 ? 0.2 : 0);
+    return { s, score };
+  });
+  scored.sort((a, b) => b.score - a.score);
+  let out = '';
+  for (const { s } of scored) {
+    if ((out + ' ' + s).length > maxChars) break;
+    if (s.trim().length < 4) continue;
+    out += (out ? '\n' : '') + s.trim();
+  }
+  return out;
+}
+
+// Function to parse CTE PDFs
+async function parseCTEPDFs(question) {
+  try {
+    const targets = await selectCTEPdfFiles(question);
+    if (targets.length === 0) return '';
+    let snippetBundle = '';
+    for (const filePath of targets) {
       try {
-        const filePath = path.join(cteDir, file);
         const dataBuffer = await fs.readFile(filePath);
         const pdfData = await pdf(dataBuffer);
-        cteContent += `\n\n--- ${file} ---\n${pdfData.text}`;
+        const snippet = extractSnippetsFromText(pdfData.text, question, 1000);
+        const label = path.basename(filePath);
+        if (snippet) {
+          snippetBundle += `\n\n[${label}]\n${snippet}`;
+        }
       } catch (error) {
-        console.error(`Error parsing ${file}:`, error.message);
+        console.error(`Error parsing ${filePath}:`, error.message);
       }
     }
-    
-    return cteContent;
+    return snippetBundle.trim();
   } catch (error) {
     console.error('Error reading CTE PDFs:', error.message);
     return '';
@@ -147,9 +211,10 @@ app.post("/api/ask", async (req, res) => {
 
     console.log(`Processing question: ${question}`);
 
-    // Check if question is CTE-related
-    const isCTE = isCTERelated(question);
-    console.log(`CTE-related question: ${isCTE}`);
+    // Decide source once per question
+    const primarySource = choosePrimarySource(question);
+    const isCTE = primarySource === 'pdf' && isCTERelated(question);
+    console.log(`Primary source: ${primarySource} (CTE: ${isCTE})`);
 
     // Build conversation history for context
     let historyMessages = '';
@@ -158,18 +223,16 @@ app.post("/api/ask", async (req, res) => {
       historyMessages = `\n\nPrevious conversation:\n${historyMessages}\n\n`;
     }
 
-    // Get CTE content if needed
+    // If using PDF, try PDFs first; else prefer web
     let cteContent = '';
-    if (isCTE) {
-      console.log('Parsing CTE PDFs...');
-      cteContent = await parseCTEPDFs();
-      console.log(`CTE content length: ${cteContent.length} characters`);
+    if (primarySource === 'pdf' && isCTE) {
+      console.log('Parsing targeted CTE PDFs...');
+      cteContent = await parseCTEPDFs(question);
+      console.log(`CTE snippet length: ${cteContent.length} characters`);
     }
 
-    const messages = [
-      {
-        role: 'system',
-        content: `You are a FISD (Frisco Independent School District) counselor assistant. Give direct, specific answers about FISD graduation requirements and policies.
+    // Build messages with optional CTE context; only include CTE context if we used PDFs
+    const systemBase = `You are a FISD (Frisco Independent School District) counselor assistant. Give direct, specific answers about FISD graduation requirements and policies.
 
         RULES:
         - Keep responses under 150 words
@@ -177,25 +240,51 @@ app.post("/api/ask", async (req, res) => {
         - Be specific to FISD but concise
         - Focus on key requirements only
         - No lengthy explanations
-        - Always mention FISD specifically${isCTE ? '\n\nCTE INFORMATION:\n' + cteContent : ''}`
-      },
-            {
-              role: 'user',
-              content: `${historyMessages}User: ${question}`
-            }
-          ];
+        - Always mention FISD specifically`;
 
-    const perplexityResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
-      model: 'sonar-pro',
-      messages: messages,
-    }, {
-      headers: {
-        'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+    const systemWithCTE = cteContent
+      ? systemBase + `\n\nCTE CONTEXT (snippets from district PDFs):\n${cteContent}`
+      : systemBase;
+
+    const messages = [
+      {
+        role: 'system',
+        content: systemWithCTE
       },
-      timeout: 10000 // 10 second timeout for very short responses
-    });
+      {
+        role: 'user',
+        content: `${historyMessages}User: ${question}`
+      }
+    ];
+
+    // If PDF gave good context, rely on that; otherwise go to web (Perplexity)
+    let perplexityResponse = { data: { choices: [{ message: { content: '' } }] } };
+    if (!cteContent || cteContent.length < 200) {
+      perplexityResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
+        model: 'sonar-pro',
+        messages: messages,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        timeout: 10000 // 10 second timeout for very short responses
+      });
+    } else {
+      // Ask the model to answer strictly from provided CTE snippets
+      perplexityResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
+        model: 'sonar-pro',
+        messages: messages,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        timeout: 10000
+      });
+    }
 
     let answer = perplexityResponse.data.choices[0].message.content;
 
