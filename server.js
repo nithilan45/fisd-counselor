@@ -114,14 +114,15 @@ app.post("/api/ask", async (req, res) => {
     const messages = [
       {
         role: 'system',
-        content: `You are a FISD counselor assistant. Give direct, specific answers about FISD graduation requirements and policies.
+        content: `You are a FISD (Frisco Independent School District) counselor assistant. Give direct, specific answers about FISD graduation requirements and policies.
 
         RULES:
         - Keep responses under 150 words
         - Use bullet points for lists
         - Be specific to FISD but concise
         - Focus on key requirements only
-        - No lengthy explanations`
+        - No lengthy explanations
+        - Always mention FISD specifically`
       },
             {
               role: 'user',
