@@ -32,6 +32,12 @@ function choosePrimarySource(question) {
   return likelyCTE ? 'pdf' : 'web';
 }
 
+// Detect overview-style questions ("tell me about", "what is", "overview")
+function isOverviewQuery(question) {
+  const q = question.toLowerCase();
+  return /\b(tell me about|what is|overview|explain|describe)\b/.test(q);
+}
+
 // Select subset of PDFs based on cluster hints in question and filenames
 async function selectCTEPdfFiles(question) {
   const cteDir = path.join(__dirname, 'cte-pdfs');
@@ -213,6 +219,7 @@ app.post("/api/ask", async (req, res) => {
 
     // Decide source once per question
     const primarySource = choosePrimarySource(question);
+    const overviewMode = isOverviewQuery(question);
     const isCTE = primarySource === 'pdf' && isCTERelated(question);
     console.log(`Primary source: ${primarySource} (CTE: ${isCTE})`);
 
@@ -240,7 +247,14 @@ app.post("/api/ask", async (req, res) => {
         - Be specific to FISD but concise
         - Focus on key requirements only
         - No lengthy explanations
-        - Always mention FISD specifically`;
+        - Always mention FISD specifically
+        ${overviewMode ? `
+        If the question asks for an overview, prioritize:
+        - What it is and purpose (1-2 bullets)
+        - Who it's for and key opportunities/benefits
+        - Participation/availability in FISD (campuses or programs if known)
+        - End with basic requirements or next steps
+        ` : ''}`;
 
     const systemWithCTE = cteContent
       ? systemBase + `\n\nCTE CONTEXT (snippets from district PDFs):\n${cteContent}`
