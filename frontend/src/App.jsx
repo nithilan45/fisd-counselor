@@ -46,8 +46,8 @@ function App() {
     setIsLoading(true)
 
     try {
-      // Build compact history for context (limit to last 10 messages to prevent payload size issues)
-      const recentMessages = messages.slice(-10) // Only last 10 messages
+      // Build compact history for context (limit to last 5 messages for speed)
+      const recentMessages = messages.slice(-5) // Only last 5 messages
       const historyPayload = recentMessages.map(m => ({
         type: m.type === 'bot' ? 'assistant' : 'user',
         content: m.content,
@@ -58,7 +58,7 @@ function App() {
       console.log('Payload:', { question: message, conversationHistory: historyPayload })
       
       const response = await axios.post('https://fisd-counselor.onrender.com/api/ask', { question: message, conversationHistory: historyPayload }, {
-        timeout: 35000, // 35 second timeout for Render cold starts with conversation history
+        timeout: 20000, // 20 second timeout for faster responses
         headers: {
           'Content-Type': 'application/json',
         }
