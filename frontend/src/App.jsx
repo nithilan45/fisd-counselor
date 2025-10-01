@@ -58,7 +58,7 @@ function App() {
       console.log('Payload:', { question: message, conversationHistory: historyPayload })
       
       const response = await axios.post('https://fisd-counselor.onrender.com/api/ask', { question: message, conversationHistory: historyPayload }, {
-        timeout: 20000, // 20 second timeout for faster responses
+        timeout: 15000, // 15 second timeout for very fast responses
         headers: {
           'Content-Type': 'application/json',
         }

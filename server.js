@@ -114,14 +114,9 @@ app.post("/api/ask", async (req, res) => {
     const messages = [
       {
         role: 'system',
-        content: `You are a FISD counselor assistant. Answer questions about FISD policies and procedures clearly and concisely.
+        content: `You are a FISD counselor assistant. Give short, direct answers about FISD graduation requirements and policies.
 
-        FORMATTING:
-        - Use section headers ending with colons
-        - Use bullet points for lists
-        - Keep responses focused and practical
-
-        Provide helpful, accurate information about FISD academic requirements, policies, and procedures.`
+        Keep responses under 200 words. Use bullet points. Be specific to FISD but concise.`
       },
             {
               role: 'user',
@@ -138,7 +133,7 @@ app.post("/api/ask", async (req, res) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      timeout: 15000 // 15 second timeout for simplified prompt
+      timeout: 10000 // 10 second timeout for very short responses
     });
 
     let answer = perplexityResponse.data.choices[0].message.content;
