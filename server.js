@@ -14,7 +14,9 @@ const CTE_KEYWORDS = [
   'workforce programs', 'certifications', 'trade programs', 'vocational',
   'agriculture', 'architecture', 'business', 'education', 'engineering',
   'health', 'hospitality', 'information technology', 'law', 'arts',
-  'audio video technology', 'communications', 'career cluster'
+  'audio video technology', 'communications', 'career cluster',
+  'computer science', 'ap computer science', 'programming', 'software',
+  'technology', 'stem', 'math', 'science', 'course', 'classes'
 ];
 
 // Function to detect if question is CTE-related
@@ -23,13 +25,10 @@ function isCTERelated(question) {
   return CTE_KEYWORDS.some(keyword => lowerQuestion.includes(keyword));
 }
 
-// Choose which source to try first based on question
+// Always try PDFs first, then web search if insufficient
 function choosePrimarySource(question) {
-  const q = question.toLowerCase();
-  const likelyCTE = isCTERelated(q) || /pathway|cluster|cte|prereq|cert/i.test(q);
-  const likelyROTC = /rotc|jrotc/i.test(q); // likely not in our CTE PDFs
-  if (likelyROTC) return 'web';
-  return likelyCTE ? 'pdf' : 'web';
+  // Always start with PDFs for any question
+  return 'pdf';
 }
 
 // Detect overview-style questions ("tell me about", "what is", "overview")
@@ -38,7 +37,7 @@ function isOverviewQuery(question) {
   return /\b(tell me about|what is|overview|explain|describe)\b/.test(q);
 }
 
-// Select subset of PDFs based on cluster hints in question and filenames
+// Select PDFs - prioritize relevant ones but include all for comprehensive search
 async function selectCTEPdfFiles(question) {
   const cteDir = path.join(__dirname, 'cte-pdfs');
   let files = [];
@@ -49,6 +48,8 @@ async function selectCTEPdfFiles(question) {
   }
   const pdfFiles = files.filter(f => f.toLowerCase().endsWith('.pdf'));
   const q = question.toLowerCase();
+  
+  // First try to find specific matches
   const clusters = [
     { key: 'agriculture', match: /agri|animal|plant|floral/ },
     { key: 'architecture', match: /architec|construction|design/i },
@@ -57,20 +58,23 @@ async function selectCTEPdfFiles(question) {
     { key: 'engineering', match: /engineer|stem|robot|manufactur/i },
     { key: 'health', match: /health|medical|nurse|bio/i },
     { key: 'hospitality', match: /hospitality|tourism|culinary|hotel/i },
-    { key: 'information-technology', match: /it|information\s*tech|cyber|programming|software|network/i },
+    { key: 'information-technology', match: /it|information\s*tech|cyber|programming|software|network|computer|compsci/i },
     { key: 'law', match: /law|public\s*service|security|criminal/i },
     { key: 'arts', match: /arts|audio|video|communication|media/i }
   ];
+  
   const matchedCluster = clusters.find(c => c.match.test(q));
   if (matchedCluster) {
     const subset = pdfFiles.filter(f => f.toLowerCase().includes(matchedCluster.key));
-    if (subset.length > 0) return subset.map(f => path.join(cteDir, f));
+    if (subset.length > 0) {
+      // Return matched cluster PDFs + a few others for comprehensive coverage
+      const others = pdfFiles.filter(f => !f.toLowerCase().includes(matchedCluster.key)).slice(0, 2);
+      return [...subset, ...others].map(f => path.join(cteDir, f));
+    }
   }
-  // Fallback: if question mentions CTE but no specific cluster
-  if (isCTERelated(q)) {
-    return pdfFiles.slice(0, 3).map(f => path.join(cteDir, f)); // limit for speed
-  }
-  return [];
+  
+  // For any question, return all PDFs to ensure comprehensive search
+  return pdfFiles.map(f => path.join(cteDir, f));
 }
 
 // Extract short, relevant snippets from PDF text
@@ -78,11 +82,31 @@ function extractSnippetsFromText(fullText, question, maxChars = 1200) {
   if (!fullText) return '';
   const q = question.toLowerCase().split(/\W+/).filter(w => w.length > 3);
   const sentences = fullText.split(/\n+|(?<=[.!?])\s+/);
+  
+  // Boost score for prerequisite-related content
+  const prereqKeywords = ['prerequisite', 'prereq', 'required', 'must', 'completion', 'grade', 'level'];
+  const isPrereqQuestion = /prereq|requirement|required/i.test(question);
+  
   const scored = sentences.map(s => {
     const ls = s.toLowerCase();
-    const score = q.reduce((acc, w) => acc + (ls.includes(w) ? 1 : 0), 0) + (s.length < 200 ? 0.2 : 0);
+    let score = q.reduce((acc, w) => acc + (ls.includes(w) ? 1 : 0), 0);
+    
+    // Boost score for prerequisite content if asking about prerequisites
+    if (isPrereqQuestion) {
+      score += prereqKeywords.reduce((acc, kw) => acc + (ls.includes(kw) ? 2 : 0), 0);
+    }
+    
+    // Boost score for course names and specific details
+    if (/ap\s+computer|computer\s+science|compsci|cs\s+a/i.test(ls)) {
+      score += 3;
+    }
+    
+    // Prefer shorter, more focused sentences
+    if (s.length < 200) score += 0.2;
+    
     return { s, score };
   });
+  
   scored.sort((a, b) => b.score - a.score);
   let out = '';
   for (const { s } of scored) {
@@ -230,13 +254,11 @@ app.post("/api/ask", async (req, res) => {
       historyMessages = `\n\nPrevious conversation:\n${historyMessages}\n\n`;
     }
 
-    // If using PDF, try PDFs first; else prefer web
+    // Always try PDFs first for any question
     let cteContent = '';
-    if (primarySource === 'pdf' && isCTE) {
-      console.log('Parsing targeted CTE PDFs...');
-      cteContent = await parseCTEPDFs(question);
-      console.log(`CTE snippet length: ${cteContent.length} characters`);
-    }
+    console.log('Parsing PDFs for comprehensive search...');
+    cteContent = await parseCTEPDFs(question);
+    console.log(`PDF snippet length: ${cteContent.length} characters`);
 
     // Build messages with optional CTE context; only include CTE context if we used PDFs
     const systemBase = `You are a FISD (Frisco Independent School District) counselor assistant. Give direct, specific answers about FISD graduation requirements and policies.
@@ -271,9 +293,13 @@ app.post("/api/ask", async (req, res) => {
       }
     ];
 
-    // If PDF gave good context, rely on that; otherwise go to web (Perplexity)
+    // Always try to answer from PDF content first, fallback to web if insufficient
     let perplexityResponse = { data: { choices: [{ message: { content: '' } }] } };
-    if (!cteContent || cteContent.length < 200) {
+    
+    // If we have substantial PDF content, use it; otherwise fallback to web search
+    if (cteContent && cteContent.length > 100) {
+      console.log('Using PDF content for answer');
+      // Use PDF content with web search as backup
       perplexityResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
         model: 'sonar-pro',
         messages: messages,
@@ -283,10 +309,11 @@ app.post("/api/ask", async (req, res) => {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        timeout: 10000 // 10 second timeout for very short responses
+        timeout: 10000
       });
     } else {
-      // Ask the model to answer strictly from provided CTE snippets
+      console.log('PDF content insufficient, using web search');
+      // Fallback to web search
       perplexityResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
         model: 'sonar-pro',
         messages: messages,
