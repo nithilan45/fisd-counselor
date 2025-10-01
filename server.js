@@ -150,7 +150,7 @@ app.post("/api/ask", async (req, res) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      timeout: 20000 // 20 second timeout for Perplexity API
+      timeout: 30000 // 30 second timeout for Perplexity API with conversation history
     });
 
     let answer = perplexityResponse.data.choices[0].message.content;
