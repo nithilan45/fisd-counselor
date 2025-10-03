@@ -270,9 +270,15 @@
         
         function redirectToMobile() {
             if (isMobile()) {
-                // Only redirect if we're on the main index page
-                if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html')) {
+                // Redirect to mobile version for all pages
+                const currentPath = window.location.pathname;
+                const currentFile = currentPath.split('/').pop();
+                
+                if (currentFile === '' || currentFile === 'index.html') {
                     window.location.href = 'index-mobile.html';
+                } else if (currentFile === 'challenge.html') {
+                    // For other pages, just show mobile navigation
+                    // Don't redirect, just ensure mobile nav is visible
                 }
             }
         }

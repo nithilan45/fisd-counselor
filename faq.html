@@ -201,11 +201,12 @@
     <script>
         // Mobile detection and navigation switching
         function isMobile() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
         
         function toggleNavigation() {
-            if (isMobile()) {
+            const isSmallScreen = window.innerWidth <= 768;
+            if (isSmallScreen) {
                 // Hide desktop nav, show mobile nav
                 const desktopNav = document.querySelector('.nav');
                 const mobileNav = document.querySelector('.mobile-nav');
