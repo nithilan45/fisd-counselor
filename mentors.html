@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentors & Judges - Project Origin</title>
+    <link rel="stylesheet" href="styles.css?v=66">
+    <link rel="stylesheet" href="styles-mobile.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <div class="nav-brand">
+        </div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">Home</a>
+            <a href="challenge.html" class="nav-item">Challenge</a>
+            <a href="mentors.html" class="nav-item active">Mentors</a>
+            <a href="faq.html" class="nav-item">FAQ</a>
+            <a href="contact.html" class="nav-item">Contact</a>
+        </div>
+    </nav>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="challenge.html" class="nav-link">Origin Challenge</a>
+                <a href="mentors.html" class="nav-link active">Mentors</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <h1 class="page-title">Mentors & Judges</h1>
+            <p class="page-subtitle">Learn from immigrant founders and industry leaders who understand your journey</p>
+        </div>
+    </section>
+
+    <!-- Coming Soon Section -->
+    <section class="coming-soon-section">
+        <div class="container">
+            <div class="coming-soon-content">
+                <h2>Coming Soon!</h2>
+                <p>We're assembling an incredible lineup of immigrant founders and industry leaders to mentor you through the Origin Challenge. Check back soon!</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/originlogo.svg" alt="Project Origin" class="logo-img">
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="challenge.html">Origin Challenge</a>
+                    <a href="mentors.html">Mentors</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="faq.html">FAQ</a>
+                </div>
+                <div class="footer-contact">
+                    <p>Contact: <a href="mailto:nithilan@projectorigin.co">nithilan@projectorigin.co</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Footer -->
+    <footer class="mobile-footer">
+        <div class="footer-logo">
+            <img src="assets/originlogo.svg" alt="Project Origin" class="logo">
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="challenge.html">Challenge</a>
+            <a href="mentors.html">Mentors</a>
+            <a href="faq.html">FAQ</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <p class="footer-text">© 2024 Project Origin</p>
+    </footer>
+
+    <script>
+        // Mobile detection and navigation switching
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        }
+        
+        function toggleNavigation() {
+            if (isMobile()) {
+                // Hide desktop nav, show mobile nav
+                const desktopNav = document.querySelector('.nav');
+                const mobileNav = document.querySelector('.mobile-nav');
+                if (desktopNav) desktopNav.style.display = 'none';
+                if (mobileNav) mobileNav.style.display = 'flex';
+            } else {
+                // Hide mobile nav, show desktop nav
+                const desktopNav = document.querySelector('.nav');
+                const mobileNav = document.querySelector('.mobile-nav');
+                if (desktopNav) desktopNav.style.display = 'flex';
+                if (mobileNav) mobileNav.style.display = 'none';
+            }
+        }
+        
+        // Run navigation toggle
+        document.addEventListener('DOMContentLoaded', toggleNavigation);
+        window.addEventListener('resize', toggleNavigation);
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

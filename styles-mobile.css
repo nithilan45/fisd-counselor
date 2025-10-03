@@ -1,0 +1,882 @@
+/* Fresh Mobile CSS - Completely New Design */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #1f2937;
+    background: #ffffff;
+    overflow-x: hidden;
+}
+
+/* Mobile Navigation */
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 20px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.nav-title {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--origin-blue);
+}
+
+.nav-menu {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-item {
+    font-size: 13px;
+    color: #6b7280;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    font-weight: 500;
+    min-width: fit-content;
+}
+
+.nav-item.active {
+    color: #1e40af;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+}
+
+.nav-item:hover:not(.active) {
+    color: #1e40af;
+    background: #f8fafc;
+}
+
+/* Mobile Hero - Logo Synced Design */
+.mobile-hero {
+    background: #001896;
+    padding: 100px 20px 40px;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-logo {
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+    animation: logoFloat 3s ease-in-out infinite;
+    background: white;
+    border-radius: 50%;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-logo .logo {
+    width: 140px;
+    height: 140px;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+}
+
+.hero-logo .logo:hover {
+    transform: scale(1.05);
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.hero-title {
+    font-size: 32px;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 12px;
+    line-height: 1.1;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 2;
+}
+
+.hero-text {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 24px;
+    line-height: 1.5;
+    max-width: 320px;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-btn {
+    background: white;
+    color: #001896;
+    padding: 14px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    border: 2px solid white;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-btn:hover {
+    background: #f8fafc;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    color: #001896;
+}
+
+/* Section Styling */
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #001896;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+/* Only make section titles white on dark backgrounds */
+.mobile-hero .section-title,
+.mobile-challenge .section-title {
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Override section titles on white backgrounds */
+.mobile-problem .section-title,
+.mobile-values .section-title,
+.mobile-model .section-title,
+.mobile-timeline .section-title,
+.mobile-eligibility .section-title,
+.mobile-judging .section-title {
+    color: #001896 !important;
+    text-shadow: none;
+}
+
+/* Ensure all text on white backgrounds is dark */
+.mobile-problem,
+.mobile-values,
+.mobile-model,
+.mobile-timeline,
+.mobile-eligibility,
+.mobile-judging {
+    color: #1f2937;
+}
+
+.mobile-problem h1,
+.mobile-problem h2,
+.mobile-problem h3,
+.mobile-values h1,
+.mobile-values h2,
+.mobile-values h3,
+.mobile-model h1,
+.mobile-model h2,
+.mobile-model h3,
+.mobile-timeline h1,
+.mobile-timeline h2,
+.mobile-timeline h3,
+.mobile-eligibility h1,
+.mobile-eligibility h2,
+.mobile-eligibility h3,
+.mobile-judging h1,
+.mobile-judging h2,
+.mobile-judging h3 {
+    color: #001896;
+}
+
+/* Mobile Values - Acronym Focused Design */
+.mobile-values {
+    padding: 40px 20px;
+    background: #f8fafc;
+    position: relative;
+    overflow: hidden;
+}
+
+.acronym-showcase {
+    text-align: center;
+}
+
+.acronym-title {
+    font-size: 48px;
+    font-weight: 900;
+    color: #001896;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 10px rgba(0, 24, 150, 0.2);
+    margin-bottom: 8px;
+}
+
+.acronym-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.acronym-letters {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.letter-card {
+    background: white;
+    padding: 20px 12px;
+    border-radius: 16px;
+    text-align: center;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.letter-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.letter-card:hover::before {
+    left: 100%;
+}
+
+.letter-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 24, 150, 0.15);
+    border-color: #001896;
+}
+
+.letter {
+    font-size: 24px;
+    font-weight: 900;
+    color: #001896;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.word {
+    font-size: 11px;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 6px;
+    line-height: 1.2;
+}
+
+.emoji {
+    font-size: 18px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+}
+
+.letter-card:hover .emoji {
+    transform: scale(1.2) rotate(5deg);
+}
+
+/* Mobile Problem */
+.mobile-problem {
+    padding: 50px 20px;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+}
+
+.problem-text {
+    font-size: 16px;
+    color: #374151;
+    text-align: center;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.problem-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+
+.stat {
+    background: #f3f4f6;
+    padding: 16px 8px;
+    border-radius: 8px;
+    text-align: center;
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s;
+}
+
+.stat:hover {
+    border-color: #1e40af;
+    transform: translateY(-1px);
+}
+
+.stat-num {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 4px;
+}
+
+.stat-text {
+    font-size: 11px;
+    color: #6b7280;
+    line-height: 1.3;
+}
+
+/* Mobile Model */
+.mobile-model {
+    padding: 50px 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+}
+
+.model-steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.step {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid #1e40af;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: all 0.3s;
+}
+
+.step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.step-num {
+    width: 32px;
+    height: 32px;
+    background: #1e40af;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.step-content h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 4px;
+}
+
+.step-content p {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+/* Mobile Challenge */
+.mobile-challenge {
+    padding: 50px 20px;
+    background: #001896;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.challenge-tagline {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 24px;
+    color: #ffffff;
+    line-height: 1.5;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.challenge-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.feature {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s;
+}
+
+.feature:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.feature-emoji {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.feature h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.feature p {
+    font-size: 12px;
+    opacity: 0.8;
+    line-height: 1.3;
+}
+
+.challenge-btn {
+    display: block;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s;
+    margin: 0 auto;
+    max-width: 200px;
+}
+
+.challenge-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Mobile CTA - Copy from Desktop */
+.final-cta {
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #001896 0%, #1e40af 50%, #001896 100%);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.final-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    opacity: 1;
+}
+
+.cta-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.cta-text h2 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.cta-text p {
+    font-size: 18px;
+    margin-bottom: 0;
+    color: #ffffff;
+    opacity: 0.95;
+    line-height: 1.6;
+}
+
+.cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+}
+
+.cta-button.primary {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    color: #001896;
+    padding: 18px 40px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 2px solid transparent;
+    min-width: 200px;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+}
+
+.cta-button.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.cta-button.secondary {
+    background: transparent;
+    color: #ffffff;
+    padding: 16px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    min-width: 200px;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+}
+
+.cta-button.secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Mobile Footer */
+.mobile-footer {
+    background: #ffffff !important;
+    color: #001896 !important;
+    padding: 32px 20px;
+    text-align: center;
+    display: none; /* Hidden by default */
+}
+
+/* Show mobile footer on mobile devices */
+@media (max-width: 768px) {
+    .mobile-footer {
+        display: block !important;
+        background: #ffffff !important;
+        color: #001896 !important;
+    }
+    
+    .footer {
+        display: none !important;
+    }
+    
+    /* Override desktop footer styles that might interfere */
+    .footer-content {
+        flex-direction: row !important;
+    }
+    
+    .footer-links {
+        flex-direction: row !important;
+        justify-content: center !important;
+        gap: 16px !important;
+    }
+    
+    /* Ensure mobile footer text is dark blue */
+    .mobile-footer * {
+        color: #001896 !important;
+    }
+    
+    .mobile-footer .footer-links a {
+        color: #001896 !important;
+    }
+    
+    .mobile-footer .footer-text {
+        color: #001896 !important;
+    }
+}
+
+.footer-logo {
+    margin-bottom: 20px;
+}
+
+.footer-logo .logo {
+    width: 32px;
+    height: 32px;
+    filter: brightness(0) saturate(100%) invert(9%) sepia(100%) saturate(7500%) hue-rotate(240deg) brightness(95%) contrast(100%);
+}
+
+.footer-links {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.footer-links a {
+    color: #001896 !important;
+    text-decoration: none;
+    font-size: 12px;
+    transition: color 0.3s;
+    font-weight: 500;
+    white-space: nowrap;
+    padding: 4px 6px;
+    min-width: fit-content;
+}
+
+.footer-links a:hover {
+    color: #3b82f6 !important;
+}
+
+.footer-text {
+    font-size: 12px;
+    color: #001896 !important;
+    font-weight: 400;
+}
+
+/* Challenge Page Mobile Color Overrides */
+@media (max-width: 768px) {
+    /* Hero Section */
+    .challenge-hero {
+        background: #001896 !important;
+        color: #ffffff !important;
+    }
+    
+    .challenge-hero .hero-title,
+    .challenge-hero .hero-subtitle,
+    .challenge-hero .hero-description {
+        color: #ffffff !important;
+    }
+    
+    /* Program Overview */
+    .program-overview {
+        background: #ffffff !important;
+    }
+    
+    .program-overview .section-title {
+        color: #001896 !important;
+    }
+    
+    /* Day Flow/Timeline */
+    .day-flow {
+        background: #f8fafc !important;
+    }
+    
+    .day-flow .section-title {
+        color: #001896 !important;
+    }
+    
+    /* Eligibility */
+    .eligibility {
+        background: #ffffff !important;
+    }
+    
+    .eligibility .section-title {
+        color: #001896 !important;
+    }
+    
+    /* Judging Criteria */
+    .judging-criteria {
+        background: #f8fafc !important;
+    }
+    
+    .judging-criteria .section-title {
+        color: #001896 !important;
+    }
+    
+    /* Program Timeline */
+    .program-timeline {
+        background: #ffffff !important;
+    }
+    
+    .program-timeline .section-title {
+        color: #001896 !important;
+    }
+    
+    /* Prize Section - Reduce excessive spacing */
+    .prize-section {
+        padding: 10px 0 !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .prize-content {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    
+    .prize-item {
+        margin-bottom: 10px !important;
+    }
+    
+    .prize-item:last-child {
+        margin-bottom: 0 !important;
+    }
+    
+    /* Remove any bottom padding/margin from overview content */
+    .overview-content {
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .outcomes-subheading {
+        margin-bottom: 10px !important;
+    }
+    
+    .outcome-strip {
+        margin-bottom: 10px !important;
+    }
+    
+    /* Reduce overall section padding on mobile */
+    .program-overview {
+        padding: 40px 0 !important;
+    }
+    
+    .day-flow {
+        padding: 40px 0 !important;
+    }
+    
+    .eligibility {
+        padding: 40px 0 !important;
+    }
+    
+    .judging-criteria {
+        padding: 40px 0 !important;
+    }
+    
+    .program-timeline {
+        padding: 40px 0 !important;
+    }
+    
+    /* Override container padding that might be adding space */
+    .container {
+        padding: 0 20px !important;
+    }
+    
+    /* Remove any extra spacing from specific elements */
+    .overview-header {
+        margin-bottom: 20px !important;
+    }
+    
+    .overview-description {
+        margin-bottom: 20px !important;
+    }
+    
+    /* Ensure no extra space between sections */
+    .program-overview + .day-flow {
+        margin-top: 0 !important;
+        padding-top: 20px !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .values-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-links {
+        gap: 6px !important;
+        padding: 0 5px;
+    }
+    
+    .footer-links a {
+        font-size: 11px;
+        padding: 3px 4px;
+    }
+}
+    
+    .challenge-features {
+        grid-template-columns: 1fr;
+    }
+    
+    .problem-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-menu {
+        gap: 8px;
+    }
+    
+    .nav-item {
+        font-size: 13px;
+        padding: 4px 8px;
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Focus states */
+.cta-btn:focus,
+.nav-item:focus {
+    outline: 2px solid #1e40af;
+    outline-offset: 2px;
+}

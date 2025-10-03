@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Project Origin</title>
+    <link rel="stylesheet" href="styles.css?v=64">
+    <link rel="stylesheet" href="styles-mobile.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <div class="nav-brand">
+        </div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">Home</a>
+            <a href="challenge.html" class="nav-item">Challenge</a>
+            <a href="mentors.html" class="nav-item">Mentors</a>
+            <a href="faq.html" class="nav-item">FAQ</a>
+            <a href="contact.html" class="nav-item active">Contact</a>
+        </div>
+    </nav>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="challenge.html" class="nav-link">Origin Challenge</a>
+                <a href="mentors.html" class="nav-link">Mentors</a>
+                <a href="contact.html" class="nav-link active">Contact</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Get in Touch</h1>
+            <p>Ready to join the Origin Movement? Have questions about the program? We'd love to hear from you.</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h2>Let's Connect</h2>
+                    <p>Whether you're a student ready to join our next cohort, a mentor interested in supporting immigrant entrepreneurs, or a partner looking to collaborate, we're here to help.</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <div class="contact-icon">📧</div>
+                            <div class="contact-details">
+                                <h3>Email Us</h3>
+                                <p><a href="mailto:nithilan@projectorigin.co">nithilan@projectorigin.co</a></p>
+                                <small>We typically respond within 24 hours</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">💬</div>
+                            <div class="contact-details">
+                                <h3>Social Media</h3>
+                                <p>Follow us for updates and inspiration</p>
+                                <small>Instagram, LinkedIn, Twitter coming soon</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">🏫</div>
+                            <div class="contact-details">
+                                <h3>Partnerships</h3>
+                                <p>Schools, organizations, and companies</p>
+                                <small>Let's work together to expand opportunities</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form-section">
+                    <h3>Send us a Message</h3>
+                    <form class="contact-form" id="contact-form" action="https://formspree.io/f/xwpngwpl" method="POST">
+                        <div class="form-group">
+                            <label for="name">Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select a topic</option>
+                                <option value="student">I'm a student interested in joining</option>
+                                <option value="mentor">I want to become a mentor</option>
+                                <option value="partnership">Partnership opportunity</option>
+                                <option value="general">General question</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="5" required placeholder="Tell us about yourself and how we can help..."></textarea>
+                        </div>
+                        
+                        <input type="hidden" name="_subject" value="New Contact Form Submission - Project Origin">
+                        <input type="hidden" name="_replyto" value="">
+                        <button type="submit" class="cta-button">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Preview -->
+    <section class="faq-preview">
+        <div class="container">
+            <h2>Quick Questions?</h2>
+            <p>Check out our FAQ for answers to common questions about the Origin Challenge and our programs.</p>
+            <a href="faq.html" class="cta-button secondary">View FAQ</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="assets/originlogo.svg" alt="Project Origin" class="logo-img">
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="challenge.html">Origin Challenge</a>
+                    <a href="mentors.html">Mentors</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="faq.html">FAQ</a>
+                </div>
+                <div class="footer-contact">
+                    <p>Contact: <a href="mailto:nithilan@projectorigin.co">nithilan@projectorigin.co</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Project Origin. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Footer -->
+    <footer class="mobile-footer">
+        <div class="footer-logo">
+            <img src="assets/originlogo.svg" alt="Project Origin" class="logo">
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="challenge.html">Challenge</a>
+            <a href="mentors.html">Mentors</a>
+            <a href="faq.html">FAQ</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <p class="footer-text">© 2024 Project Origin</p>
+    </footer>
+
+    <script>
+        // Mobile detection and navigation switching
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        }
+        
+        function toggleNavigation() {
+            if (isMobile()) {
+                // Hide desktop nav, show mobile nav
+                const desktopNav = document.querySelector('.nav');
+                const mobileNav = document.querySelector('.mobile-nav');
+                if (desktopNav) desktopNav.style.display = 'none';
+                if (mobileNav) mobileNav.style.display = 'flex';
+            } else {
+                // Hide mobile nav, show desktop nav
+                const desktopNav = document.querySelector('.nav');
+                const mobileNav = document.querySelector('.mobile-nav');
+                if (desktopNav) desktopNav.style.display = 'flex';
+                if (mobileNav) mobileNav.style.display = 'none';
+            }
+        }
+        
+        // Run navigation toggle
+        document.addEventListener('DOMContentLoaded', toggleNavigation);
+        window.addEventListener('resize', toggleNavigation);
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
