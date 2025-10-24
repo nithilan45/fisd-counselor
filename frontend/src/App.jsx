@@ -10,6 +10,7 @@ function App() {
   const [hasIndexedFiles, setHasIndexedFiles] = useState(false)
 
   useEffect(() => {
+    console.log('App component mounted, initializing...')
     checkVectorStoreStatus()
     // Simple welcome message
     setMessages([{
@@ -22,8 +23,10 @@ function App() {
 
   const checkVectorStoreStatus = async () => {
     try {
+      console.log('Checking vector store status...')
       // Use Render backend directly for GitHub Pages
       const response = await axios.get('https://fisd-counselor.onrender.com/api/upload')
+      console.log('Vector store response:', response.data)
       setHasIndexedFiles(response.data.hasIndexedFiles)
     } catch (error) {
       console.error('Error checking vector store status:', error)
