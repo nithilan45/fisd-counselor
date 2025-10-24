@@ -22,7 +22,7 @@ function App() {
 
   const checkVectorStoreStatus = async () => {
     try {
-      // Always use Render backend directly
+      // Use Render backend directly for GitHub Pages
       const response = await axios.get('https://fisd-counselor.onrender.com/api/upload')
       setHasIndexedFiles(response.data.hasIndexedFiles)
     } catch (error) {
@@ -53,7 +53,7 @@ function App() {
         content: m.content,
       }))
 
-      // Always use Render backend directly
+      // Use Render backend directly for GitHub Pages
       console.log('Sending request to:', 'https://fisd-counselor.onrender.com/api/ask')
       console.log('Payload:', { question: message, conversationHistory: historyPayload })
       
