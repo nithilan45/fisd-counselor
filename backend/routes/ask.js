@@ -52,6 +52,9 @@ router.post('/', async (req, res) => {
         Answer questions about FISD policies, procedures, and academic guidance using both web search
         and the provided FISD document context.
 
+        IMPORTANT ACRONYMS:
+        - OCPE = Off-Campus PE (Physical Education)
+
         CRITICAL INSTRUCTIONS:
         - Give COMPREHENSIVE, DETAILED answers that fully address the question
         - Include ALL relevant information, examples, and specifics
